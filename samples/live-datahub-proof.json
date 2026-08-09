@@ -1,0 +1,37 @@
+{
+  "verified_at": "2026-08-10T01:30:00+05:30",
+  "datahub": {
+    "distribution": "OSS",
+    "version": "1.6.0",
+    "datapack": "showcase-ecommerce"
+  },
+  "mcp": {
+    "server": "mcp-server-datahub",
+    "transport": "stdio",
+    "mutation_enabled": true
+  },
+  "input": "ALTER TABLE b2fd91.order_entry_db.analytics.order_details RENAME COLUMN order_id TO order_identifier;",
+  "result": {
+    "decision": "BLOCK",
+    "risk_score": 10,
+    "affected_assets": 23,
+    "maximum_returned_lineage_degree": 4,
+    "critical_consumers": 1,
+    "ownership_coverage_percent": 52,
+    "release_gate": "CLOSED",
+    "generated_files": 6
+  },
+  "tool_trace": [
+    "search",
+    "list_schema_fields",
+    "get_lineage",
+    "get_entities",
+    "update_description"
+  ],
+  "writeback": {
+    "success": true,
+    "urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+    "column_path": "order_id",
+    "message": "Description updated successfully"
+  }
+}

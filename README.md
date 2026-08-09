@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/)
 
-Ripplecheck is a **counterfactual schema migration compiler** powered by the DataHub MCP tool contract. Paste breaking warehouse DDL and it projects the metadata graph, proves a bounded release policy, routes an executable migration DAG to owners, writes a hash-sealed decision capsule back to DataHub, and generates a merge-ready PR evidence pack.
+Ripplecheck is a **counterfactual schema migration compiler** powered by the DataHub MCP Server. Paste breaking warehouse DDL and it projects the metadata graph, proves a bounded release policy, routes an executable migration DAG to owners, writes a hash-sealed decision capsule back to DataHub, and generates a merge-ready PR evidence pack.
 
 It runs with **no API key, no paid billing, no network, and no Python dependencies**. A synthetic DataHub snapshot makes the judge path deterministic and fully offline. Live mode swaps in the official DataHub MCP Server without changing the orchestration path.
 
@@ -40,6 +40,8 @@ Expected output:
 For recording, use the [exact click-and-say demo runbook](docs/DEMO_RUNBOOK.md). It includes every click, screen state, narration line, timing, recovery step, architecture answer, and the requested tech-stack table in one document.
 
 Judges can use the dedicated [testing instructions](docs/TESTING.md), inspect the extracted [generated examples](examples/), and review the [project disclosures](docs/DISCLOSURES.md).
+
+**Real DataHub proof:** the live transport was also verified end to end against DataHub OSS 1.6.0, the official `showcase-ecommerce` datapack, and `mcp-server-datahub`. It read 23 downstream assets and completed a real `update_description` writeback. See the [reproducible live proof](docs/LIVE_DATAHUB_PROOF.md) and [machine-readable result](samples/live-datahub-proof.json).
 
 ## Why this is not a generic blast-radius bot
 
@@ -124,17 +126,20 @@ Copy `.mcp.json.example` and replace its repository path to use it from an MCP-c
 
 ### Live DataHub
 
-Initialize the official server against DataHub OSS or DataHub Cloud, then select the live transport:
+Start DataHub OSS with the official Quickstart, create a personal access token, install `uv`, and then select the live transport:
 
 ```bash
-npx -y @acryldata/mcp-server-datahub init
+export DATAHUB_GMS_URL="http://localhost:8080"
+export DATAHUB_GMS_TOKEN="<your-local-datahub-token>"
 export RIPPLECHECK_MODE=live
-export DATAHUB_MCP_COMMAND="npx -y @acryldata/mcp-server-datahub"
+export DATAHUB_MCP_COMMAND="uvx mcp-server-datahub@latest"
 export TOOLS_IS_MUTATION_ENABLED=true
 python3 main.py web
 ```
 
-Mutation tools are opt-in. Clear `TOOLS_IS_MUTATION_ENABLED` and uncheck writeback for a read-only live assessment.
+The official [DataHub Quickstart](https://docs.datahub.com/docs/quickstart) runs DataHub locally; the official [MCP guide](https://docs.datahub.com/docs/features/feature-guides/mcp) documents the `uvx` server and required environment variables. Mutation tools require MCP server v0.5.0+ and are opt-in. Clear `TOOLS_IS_MUTATION_ENABLED` and uncheck writeback for a read-only live assessment.
+
+This exact path was verified on August 10, 2026 with DataHub OSS 1.6.0 and its official `showcase-ecommerce` datapack. The [live proof](docs/LIVE_DATAHUB_PROOF.md) records the input, observed metrics, five MCP calls, and successful writeback without publishing credentials.
 
 ## Demo scenarios
 
@@ -149,6 +154,7 @@ Checked-in deterministic outputs:
 - [Production contract rename](samples/customer-tier-rename.json)
 - [Finance metric rename](samples/revenue-rename.json)
 - [Safe sandbox cleanup](samples/safe-sandbox-drop.json)
+- [Verified DataHub OSS + official MCP result](samples/live-datahub-proof.json)
 
 Regenerate through the real compiler path:
 
@@ -207,6 +213,7 @@ Push the repository publicly, create a Render Blueprint from it, and use the gen
 - [Exact Devpost form answers](docs/DEVPOST_FORM.md)
 - [Official-rules compliance matrix](docs/RULES_COMPLIANCE.md)
 - [Project disclosures](docs/DISCLOSURES.md)
+- [Verified live DataHub proof](docs/LIVE_DATAHUB_PROOF.md)
 - [Apache License 2.0](LICENSE)
 
 The deadline is **August 10, 2026 at 5:00 PM EDT**, or **August 11 at 2:30 AM IST**. The submission checklist targets an earlier upload window.
@@ -214,7 +221,7 @@ The deadline is **August 10, 2026 at 5:00 PM EDT**, or **August 11 at 2:30 AM IS
 ## Scope and honesty
 
 - Fixture mode is a deterministic metadata snapshot, not a DataHub Cloud connection.
-- Live mode invokes the official DataHub MCP Server and uses its real results.
+- Live mode invokes the official DataHub MCP Server and uses its real results; the checked-in proof records a completed read-and-write run against DataHub OSS 1.6.0.
 - Ripplecheck never executes the submitted DDL.
 - Generated SQL and contracts are review artifacts, not automatically applied changes.
 - The risk score is an explainable bounded score, not a probability.

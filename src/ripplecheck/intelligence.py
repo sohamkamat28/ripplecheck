@@ -15,6 +15,8 @@ def compile_intelligence(
     field: dict[str, Any],
     blast_radius: list[dict[str, Any]],
     decision: str,
+    catalog_snapshot: str = "retail-analytics-demo",
+    transport_mode: str = "fixture",
 ) -> dict[str, Any]:
     """Project the proposed change without mutation and compile review artifacts."""
     counterfactual = build_counterfactual(request, field, blast_radius)
@@ -29,6 +31,8 @@ def compile_intelligence(
         blast_radius,
         policy_proof,
         release_gate,
+        catalog_snapshot,
+        transport_mode,
     )
     return {
         "counterfactual": counterfactual,
@@ -287,6 +291,8 @@ def build_change_capsule(
     blast_radius: list[dict[str, Any]],
     policy_proof: list[dict[str, Any]],
     release_gate: dict[str, Any],
+    catalog_snapshot: str,
+    transport_mode: str,
 ) -> dict[str, Any]:
     evidence = {
         "request": {
@@ -324,8 +330,12 @@ def build_change_capsule(
         "deterministic": True,
         "input_sha256": digest,
         "evidence_sha256": hashlib.sha256(graph.encode("utf-8")).hexdigest(),
-        "catalog_snapshot": "retail-analytics-demo",
-        "transport": "DataHub MCP tool contract",
+        "catalog_snapshot": catalog_snapshot,
+        "transport": (
+            "Official DataHub MCP Server"
+            if transport_mode == "live"
+            else "DataHub MCP tool contract"
+        ),
     }
 
 
@@ -342,7 +352,7 @@ def projected_field_name(request: ChangeRequest) -> str:
 def failure_mode(asset: dict[str, Any], request: ChangeRequest) -> str:
     name = request.column
     entity_type = asset["type"].lower()
-    if entity_type == "dashboard":
+    if entity_type in {"dashboard", "chart"}:
         return f"Metric query references {name}; tiles can error or serve stale data."
     if entity_type in {"mlmodel", "ml_model"}:
         return f"Online feature contract loses {name}; training-serving skew is possible."

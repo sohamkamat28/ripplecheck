@@ -55,6 +55,7 @@ The test suite covers parsing, graph traversal, policy decisions, execution gate
 - Full assessment JSON is checked into `samples/`.
 - Extracted generated SQL, YAML, Markdown, and JSON files are checked into `examples/`.
 - `docs/ripplecheck-result.png` shows the compiled default result.
+- `docs/LIVE_DATAHUB_PROOF.md` and `samples/live-datahub-proof.json` record a completed official DataHub OSS + MCP read/write run.
 
 ## Optional live DataHub mode
 
@@ -62,12 +63,16 @@ After initializing the official DataHub MCP Server against a DataHub OSS or Clou
 
 ```bash
 export RIPPLECHECK_MODE=live
-export DATAHUB_MCP_COMMAND="npx -y @acryldata/mcp-server-datahub"
+export DATAHUB_GMS_URL="http://localhost:8080"
+export DATAHUB_GMS_TOKEN="<your-local-datahub-token>"
+export DATAHUB_MCP_COMMAND="uvx mcp-server-datahub@latest"
 export TOOLS_IS_MUTATION_ENABLED=true
 python3 main.py web --host 127.0.0.1 --port 8000
 ```
 
 Mutation tools are opt-in. Unset `TOOLS_IS_MUTATION_ENABLED` and disable the writeback checkbox for a read-only live assessment. Live connection errors are returned to the user and never fall back silently to the fixture.
+
+This path was verified on August 10, 2026 against DataHub OSS 1.6.0 and the official `showcase-ecommerce` datapack. See [`LIVE_DATAHUB_PROOF.md`](LIVE_DATAHUB_PROOF.md) for the actual results and reproduction notes.
 
 ## Availability
 

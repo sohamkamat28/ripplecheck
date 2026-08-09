@@ -20,6 +20,7 @@ REQUIRED = [
     "docs/TESTING.md",
     "docs/RULES_COMPLIANCE.md",
     "docs/DISCLOSURES.md",
+    "docs/LIVE_DATAHUB_PROOF.md",
     "docs/DEMO_SCRIPT.md",
     "docs/DEMO_RUNBOOK.md",
     "docs/ARCHITECTURE.md",
@@ -27,6 +28,7 @@ REQUIRED = [
     "samples/customer-tier-rename.json",
     "samples/revenue-rename.json",
     "samples/safe-sandbox-drop.json",
+    "samples/live-datahub-proof.json",
     "examples/customer-tier-rename/migration/compatibility_view.sql",
     "examples/customer-tier-rename/models/customer_360/schema.yml",
     "examples/customer-tier-rename/tests/assert_customer_tier_compatibility.sql",
@@ -55,6 +57,12 @@ def main() -> None:
         raise SystemExit(f"Demo narration is too long: {narration_words} words")
     for path in sorted((ROOT / "samples").glob("*.json")):
         payload = json.loads(path.read_text(encoding="utf-8"))
+        if path.name == "live-datahub-proof.json":
+            if payload.get("writeback", {}).get("success") is not True:
+                raise SystemExit("live-datahub-proof.json is missing successful writeback proof")
+            if payload.get("tool_trace", [])[-1:] != ["update_description"]:
+                raise SystemExit("live-datahub-proof.json is missing the mutation tool trace")
+            continue
         for key in (
             "decision",
             "blast_radius",

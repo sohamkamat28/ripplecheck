@@ -20,6 +20,8 @@ OpenAI Codex was used as a permitted AI coding assistant for implementation, tes
 
 `data/catalog.json` is a synthetic retail metadata graph created for the hackathon. Entity names, owners, email addresses, fields, tags, and lineage are fictional. Email addresses use the reserved `.example` domain. Fixture mode does not claim to be a live DataHub Cloud connection.
 
+The separate live-verification run used DataHub's official `showcase-ecommerce` datapack in a local DataHub OSS 1.6.0 quickstart. Only aggregate results, a catalog URN, the test column, and the successful MCP mutation response are checked in; no token or private data is included. See `docs/LIVE_DATAHUB_PROOF.md`.
+
 ## Safety and scope
 
 - Submitted DDL is parsed but never executed.

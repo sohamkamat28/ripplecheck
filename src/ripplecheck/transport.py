@@ -13,8 +13,11 @@ from typing import Any
 
 
 class DataHubTools(ABC):
+    mode = "unknown"
+    catalog_snapshot = "unknown"
+
     @abstractmethod
-    def call_tool(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+    def call_tool(self, name: str, arguments: dict[str, Any]) -> Any:
         """Call one DataHub MCP tool and return its structured result."""
 
     def close(self) -> None:
@@ -23,6 +26,9 @@ class DataHubTools(ABC):
 
 class FixtureDataHubTools(DataHubTools):
     """Implements the official tool names over a realistic metadata snapshot."""
+
+    mode = "fixture"
+    catalog_snapshot = "retail-analytics-demo"
 
     def __init__(self, catalog_path: Path, state_path: Path | None = None):
         self.catalog_path = catalog_path
@@ -230,6 +236,9 @@ class FixtureDataHubTools(DataHubTools):
 class StdioMCPDataHubTools(DataHubTools):
     """Minimal MCP client for the official DataHub stdio server."""
 
+    mode = "live"
+    catalog_snapshot = "live-datahub"
+
     def __init__(self, command: str):
         args = shlex.split(command)
         if not args:
@@ -238,11 +247,14 @@ class StdioMCPDataHubTools(DataHubTools):
             args,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
             env=os.environ.copy(),
         )
+        self._stderr_lines: list[str] = []
+        self._stderr_thread = threading.Thread(target=self._drain_stderr, daemon=True)
+        self._stderr_thread.start()
         self._next_id = 1
         self._lock = threading.Lock()
         self._request(
@@ -255,13 +267,13 @@ class StdioMCPDataHubTools(DataHubTools):
         )
         self._notify("notifications/initialized", {})
 
-    def call_tool(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+    def call_tool(self, name: str, arguments: dict[str, Any]) -> Any:
         result = self._request("tools/call", {"name": name, "arguments": arguments})
         if result.get("isError"):
             raise RuntimeError(extract_text(result) or f"DataHub MCP tool {name} failed")
         structured = result.get("structuredContent")
         if isinstance(structured, dict):
-            return structured
+            return normalize_official_result(name, structured)
         text = extract_text(result)
         try:
             value = json.loads(text)
@@ -269,7 +281,7 @@ class StdioMCPDataHubTools(DataHubTools):
             raise RuntimeError(f"DataHub MCP tool {name} returned non-JSON content") from exc
         if not isinstance(value, (dict, list)):
             raise RuntimeError(f"DataHub MCP tool {name} returned an unsupported payload")
-        return value
+        return normalize_official_result(name, value)
 
     def close(self) -> None:
         if self._process.poll() is None:
@@ -309,11 +321,21 @@ class StdioMCPDataHubTools(DataHubTools):
             raise RuntimeError("DataHub MCP stdout is unavailable")
         line = self._process.stdout.readline()
         if not line:
-            raise RuntimeError("DataHub MCP server exited unexpectedly")
+            details = "".join(self._stderr_lines[-20:]).strip()
+            suffix = f": {details}" if details else ""
+            raise RuntimeError(f"DataHub MCP server exited unexpectedly{suffix}")
         value = json.loads(line)
         if not isinstance(value, dict):
             raise RuntimeError("Invalid MCP response")
         return value
+
+    def _drain_stderr(self) -> None:
+        if self._process.stderr is None:
+            return
+        for line in self._process.stderr:
+            self._stderr_lines.append(line)
+            if len(self._stderr_lines) > 100:
+                del self._stderr_lines[:-100]
 
 
 def re_tokenize(value: str) -> list[str]:
@@ -328,6 +350,151 @@ def re_tokenize(value: str) -> list[str]:
     if current:
         tokens.append(current)
     return tokens
+
+
+def normalize_official_result(name: str, value: Any) -> Any:
+    """Map current DataHub MCP response envelopes to Ripplecheck's compact contract."""
+    if name == "get_entities" and isinstance(value, dict) and "result" in value:
+        value = value["result"]
+    if name == "search" and isinstance(value, dict):
+        for item in value.get("searchResults", []):
+            if isinstance(item, dict) and isinstance(item.get("entity"), dict):
+                item["entity"] = normalize_official_entity(item["entity"])
+    elif name == "list_schema_fields" and isinstance(value, dict):
+        value["fields"] = [
+            normalize_official_field(field)
+            for field in value.get("fields", [])
+            if isinstance(field, dict)
+        ]
+    elif name == "get_lineage" and isinstance(value, dict):
+        for direction in ("upstreams", "downstreams"):
+            bucket = value.get(direction, {})
+            items = bucket if isinstance(bucket, list) else bucket.get("searchResults", [])
+            for item in items:
+                if isinstance(item, dict) and isinstance(item.get("entity"), dict):
+                    item["entity"] = normalize_official_entity(item["entity"])
+    if isinstance(value, list):
+        return [normalize_official_entity(item) if isinstance(item, dict) else item for item in value]
+    if name == "get_entities" and isinstance(value, dict):
+        return normalize_official_entity(value)
+    return value
+
+
+def normalize_official_field(field: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(field)
+    normalized["name"] = field.get("name") or field.get("fieldPath")
+    normalized["type"] = (
+        field.get("type") or field.get("nativeDataType") or field.get("nativeType") or "unknown"
+    )
+    normalized["tags"] = collect_names(field.get("tags"))
+    normalized["tags"].extend(str(term) for term in field.get("editedGlossaryTerms", []))
+    normalized["tags"] = sorted(set(normalized["tags"]))
+    return normalized
+
+
+def normalize_official_entity(entity: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(entity)
+    properties = entity.get("properties") if isinstance(entity.get("properties"), dict) else {}
+    normalized["name"] = entity.get("name") or properties.get("name") or entity.get("urn")
+    normalized["type"] = entity.get("type") or urn_entity_type(str(entity.get("urn", "")))
+    platform = entity.get("platform")
+    normalized["platform"] = (
+        (platform.get("name") or platform.get("urn"))
+        if isinstance(platform, dict)
+        else (platform or "unknown")
+    )
+
+    owners = collect_owners(entity.get("ownership") or entity.get("owners"))
+    custom = properties.get("customProperties", [])
+    if isinstance(custom, list):
+        for item in custom:
+            if not isinstance(item, dict):
+                continue
+            key = str(item.get("key", "")).lower()
+            value = str(item.get("value", "")).strip()
+            if key in {"owner", "data_owner", "technical_owner"} and value:
+                owners.append(value)
+    normalized["owners"] = sorted(set(owners))
+
+    tags = collect_names(entity.get("globalTags") or entity.get("tags"))
+    tags.extend(collect_names(entity.get("glossaryTerms")))
+    if isinstance(custom, list):
+        for item in custom:
+            if not isinstance(item, dict):
+                continue
+            key = str(item.get("key", "")).lower()
+            value = str(item.get("value", "")).lower()
+            if key in {"business_critical", "critical"} and value == "true":
+                tags.append("critical")
+            if key in {"contains_pii", "pii"} and value == "true":
+                tags.append("pii")
+    normalized["tags"] = sorted(set(tags))
+    domain = entity.get("domain")
+    if isinstance(domain, dict):
+        domain_entity = domain.get("domain", domain)
+        if isinstance(domain_entity, dict):
+            domain_properties = domain_entity.get("properties", {})
+            normalized["domain"] = domain_properties.get("name") or domain_entity.get("urn")
+    return normalized
+
+
+def collect_owners(value: Any) -> list[str]:
+    if isinstance(value, list):
+        items = value
+    elif isinstance(value, dict):
+        items = value.get("owners", [])
+    else:
+        items = []
+    owners: list[str] = []
+    for item in items:
+        if isinstance(item, str):
+            owners.append(item)
+            continue
+        if not isinstance(item, dict):
+            continue
+        owner = item.get("owner", item)
+        if isinstance(owner, str):
+            owners.append(owner)
+        elif isinstance(owner, dict):
+            props = owner.get("properties", {})
+            owners.append(
+                str(props.get("email") or props.get("displayName") or owner.get("urn") or "")
+            )
+    return [owner for owner in owners if owner]
+
+
+def collect_names(value: Any) -> list[str]:
+    if isinstance(value, list):
+        items = value
+    elif isinstance(value, dict):
+        items = value.get("tags") or value.get("terms") or []
+    else:
+        items = []
+    names: list[str] = []
+    for item in items:
+        if isinstance(item, str):
+            names.append(item)
+            continue
+        if not isinstance(item, dict):
+            continue
+        candidate = item.get("tag") or item.get("term") or item
+        if isinstance(candidate, str):
+            names.append(candidate)
+        elif isinstance(candidate, dict):
+            props = candidate.get("properties", {})
+            name = props.get("name") or candidate.get("name") or candidate.get("urn")
+            if name:
+                names.append(str(name))
+    return names
+
+
+def urn_entity_type(urn: str) -> str:
+    prefix = "urn:li:"
+    if not urn.startswith(prefix):
+        return "dataset"
+    entity_type = urn[len(prefix) :].split(":", 1)[0]
+    aliases = {"mlModel": "mlmodel", "dataFlow": "dataflow", "dataJob": "datajob"}
+    return aliases.get(entity_type, entity_type)
 
 
 def compact_entity(entity: dict[str, Any]) -> dict[str, Any]:
@@ -350,7 +517,7 @@ def build_transport(root: Path) -> DataHubTools:
     mode = os.environ.get("RIPPLECHECK_MODE", "fixture").lower()
     if mode == "live":
         command = os.environ.get(
-            "DATAHUB_MCP_COMMAND", "npx -y @acryldata/mcp-server-datahub"
+            "DATAHUB_MCP_COMMAND", "uvx mcp-server-datahub@latest"
         )
         return StdioMCPDataHubTools(command)
     if mode != "fixture":

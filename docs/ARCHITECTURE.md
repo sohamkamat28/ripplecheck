@@ -109,7 +109,7 @@ The in-memory ZIP endpoint compiles six concrete files: compatibility SQL, dbt c
 
 `FixtureDataHubTools` implements the official tool names over `data/catalog.json`. It provides the entire judge path without credentials, network, billing, or an 8 GB DataHub quickstart. Demo writebacks are recorded in gitignored `data/run-state.json` and reapplied to the in-memory column description.
 
-`StdioMCPDataHubTools` launches `@acryldata/mcp-server-datahub`, completes the MCP initialize handshake, and calls the same names over JSON-RPC stdio. `RIPPLECHECK_MODE=live` selects it. Live failures never fall back silently to fixtures.
+`StdioMCPDataHubTools` launches the official `uvx mcp-server-datahub@latest` package, completes the MCP initialize handshake, and calls the same names over JSON-RPC stdio. `DATAHUB_GMS_URL` and `DATAHUB_GMS_TOKEN` point it at DataHub OSS or Cloud; `RIPPLECHECK_MODE=live` selects it. Live failures include the server's diagnostic tail and never fall back silently to fixtures.
 
 ## Safety properties
 

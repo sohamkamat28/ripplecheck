@@ -87,6 +87,8 @@ class RipplecheckAgent:
             field,
             blast_radius,
             decision,
+            catalog_snapshot=self.tools.catalog_snapshot,
+            transport_mode=self.tools.mode,
         )
 
         writeback_result: dict[str, Any]
@@ -224,7 +226,7 @@ def build_blast_radius(
 
 def impact_label(entity: dict[str, Any]) -> str:
     entity_type = str(entity.get("type", "dataset")).lower()
-    if entity_type == "dashboard":
+    if entity_type in {"dashboard", "chart"}:
         return "Executive metric may fail or become stale"
     if entity_type in {"mlmodel", "ml_model"}:
         return "Production feature input may drift or disappear"
@@ -245,7 +247,11 @@ def decide(
         for asset in blast_radius
         if any(str(tag).lower() == "critical" for tag in asset.get("tags", []))
     ]
-    dashboards = [asset for asset in blast_radius if asset["type"].lower() == "dashboard"]
+    dashboards = [
+        asset
+        for asset in blast_radius
+        if asset["type"].lower() in {"dashboard", "chart"}
+    ]
     models = [
         asset for asset in blast_radius if asset["type"].lower() in {"mlmodel", "ml_model"}
     ]

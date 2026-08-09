@@ -18,7 +18,7 @@ Ripplecheck reads DataHub context, simulates a real change, applies an auditable
 
 Ripplecheck is a counterfactual schema migration compiler. Paste a Snowflake `ALTER TABLE` statement and it uses DataHub MCP to resolve the field, trace exact column-level lineage paths, load owners and criticality, and project which contracts fail without touching production. Stable policy IDs produce a reproducible release gate. The agent then builds a dependency-aware, owner-routed zero-downtime migration DAG and generates a six-file PR pack with compatibility SQL, dbt contract YAML, a parity test, the review decision, owner routing, and a hash-addressed evidence capsule. With writeback enabled, that capsule is appended to the DataHub column for the next engineer or agent.
 
-The complete judge path runs offline with one command, no key, no paid model, and no installation. Live mode speaks MCP over stdio to the official DataHub MCP Server.
+The complete judge path runs offline with one command, no key, no paid model, and no installation. Live mode speaks MCP over stdio to the official DataHub MCP Server. We verified that path against DataHub OSS 1.6.0 and its official `showcase-ecommerce` datapack: one real DDL assessment discovered 23 downstream assets and completed a successful `update_description` writeback.
 
 ## Inspiration
 
@@ -56,7 +56,7 @@ The core is a dependency-free Python 3.11 compiler. A constrained parser accepts
 
 The change capsule canonicalizes request, graph, ownership, tag, and policy evidence and signs it with SHA-256. Python's `zipfile` builds deterministic review artifacts in memory with fixed timestamps so identical evidence creates byte-identical output.
 
-There are two DataHub transports. The fixture transport implements the same official tool names over a synthetic retail metadata graph for a credential-free demo. The live transport initializes the official DataHub MCP Server and calls it over JSON-RPC stdio. Both use the same agent path, and live errors never fall back silently.
+There are two DataHub transports. The fixture transport implements the same official tool names over a synthetic retail metadata graph for a credential-free demo. The live transport initializes the official DataHub MCP Server and calls it over JSON-RPC stdio. Both use the same agent path, and live errors never fall back silently. The live transport normalizes the current official response envelopes for search, schema, lineage, entity ownership/governance, and mutations.
 
 The agent is available as a responsive web app, JSON API, CLI, and MCP stdio server. Docker, a free-plan Render Blueprint, GitHub Actions, health checks, deterministic samples, and an Apache 2.0 license are included.
 
@@ -98,6 +98,7 @@ The agent must help without applying risky changes. Generated SQL, YAML, and tes
 - The same evidence always produces the same capsule and ZIP.
 - The complete demo is one command and costs zero.
 - The project is compact enough for judges to audit but complete enough to deploy.
+- A documented DataHub OSS + official MCP run proved the same code path can read a real catalog, reason over 23 downstream assets, and write its decision back.
 
 ## What we learned
 
@@ -118,6 +119,7 @@ We also learned that deterministic authority and generative assistance should be
 ## Built with
 
 - DataHub MCP Server tool contract
+- DataHub OSS / Core Platform 1.6.0
 - Model Context Protocol over JSON-RPC stdio
 - Python 3.11 standard library
 - SHA-256 and deterministic ZIP generation
@@ -129,6 +131,7 @@ We also learned that deterministic authority and generative assistance should be
 - **Public repository:** `https://github.com/sohamkamat28/ripplecheck`
 - **Project URL:** `https://github.com/sohamkamat28/ripplecheck` (the host permits a repository with clear setup instructions; replace only with a verified hosted URL)
 - **Sample outputs:** `https://github.com/sohamkamat28/ripplecheck/tree/main/examples`
+- **Live DataHub proof:** `https://github.com/sohamkamat28/ripplecheck/blob/main/docs/LIVE_DATAHUB_PROOF.md`
 - **Demo video:** `https://youtu.be/<your-video-id>`
 
 ## Suggested Devpost tags
@@ -139,7 +142,7 @@ We also learned that deterministic authority and generative assistance should be
 
 | Criterion | Evidence |
 | --- | --- |
-| Use of DataHub | Five-call MCP loop across schema, lineage, owners, tags, and hash-sealed writeback |
+| Use of DataHub | Live-verified five-call MCP loop across DataHub OSS schema, lineage, owners, tags, and hash-sealed writeback |
 | Technical execution | Counterfactual graph, stable policy proof, execution DAG, deterministic artifacts, web/CLI/MCP, tests, CI, Docker, and live transport |
 | Originality | Compiles a schema change into release evidence and migration code instead of providing catalog chat or a flat blast radius |
 | Real-world usefulness | Prevents known data and ML breakage, sequences a reversible rollout, and routes every consumer to an owner |

@@ -26,9 +26,9 @@ The entrant must personally confirm each item; code cannot prove these facts.
 | Requirement | Evidence | Status |
 | --- | --- | --- |
 | Working software application | Web app, CLI, JSON API, and MCP server; automated tests and health endpoint | Ready |
-| Uses DataHub open source plus MCP Server, Agent Context Kit, DataHub Skills, or Analytics Agent | Official DataHub MCP stdio transport exists; fixture preserves tool semantics | **Live end-to-end DataHub proof still recommended before submission** |
+| Uses DataHub open source plus MCP Server, Agent Context Kit, DataHub Skills, or Analytics Agent | Verified against DataHub OSS 1.6.0, the official `showcase-ecommerce` datapack, and official MCP stdio server; see `docs/LIVE_DATAHUB_PROOF.md` | Ready |
 | Fits a challenge | Primary: Agents That Do Real Work; also strongly aligns with Metadata-Aware Code Generation | Ready |
-| Reads context, acts, and writes back | Schema, lineage, owners, tags, policy, generated code, execution DAG, and `update_description` capsule | Ready in fixture; live transport available |
+| Reads context, acts, and writes back | Live MCP run used `search`, `list_schema_fields`, `get_lineage`, `get_entities`, and successful `update_description`; agent generated policy, DAG, and six artifacts | Ready and live-verified |
 | Runs consistently as depicted and described | Dependency-free fixture path, Docker, Render Blueprint, tests, preflight | Ready |
 | Built during submission period | See `docs/DISCLOSURES.md` | Entrant attestation required |
 | Disclose pre-existing code | No pre-existing project code declared; AI coding assistance disclosed | Ready |
@@ -76,7 +76,7 @@ Stage One is pass/fail for theme fit and reasonable application of the required 
 
 | Criterion | Ripplecheck proof |
 | --- | --- |
-| Use of DataHub | Five-tool evidence loop across schema, lineage, ownership, governance, and writeback |
+| Use of DataHub | Live-verified five-tool evidence loop across DataHub OSS schema, lineage, ownership, governance, and writeback |
 | Technical execution | End-to-end web/CLI/MCP paths, deterministic policies and artifacts, tests, CI, Docker, deploy config |
 | Originality | Counterfactual migration compiler rather than catalog chat or a flat blast-radius list |
 | Real-world usefulness | Prevents schema breakage, assigns remediation, and produces review-ready code |
@@ -105,7 +105,7 @@ Submission accepts the official rules as a contract and the binding decisions of
 - [ ] Public video URL under 3 minutes
 - [ ] Cover image
 - [ ] Project description
-- [ ] Technologies used: DataHub MCP Server; DataHub OSS/Core Platform only if actually demonstrated
+- [x] Technologies used: DataHub MCP Server and DataHub OSS/Core Platform, both verified live
 - [ ] Optional feedback survey
 - [ ] Final receipt screenshot/PDF
 

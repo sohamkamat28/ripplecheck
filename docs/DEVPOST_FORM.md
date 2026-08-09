@@ -9,7 +9,7 @@ Use this page while completing the submission form. It reflects the live form fe
 | Project name | `Ripplecheck` |
 | Tagline | `The DataHub MCP agent that compiles breaking warehouse DDL into a provable, owner-routed migration plan.` |
 | Description | Paste all of [`DEVPOST.md`](DEVPOST.md), from **Short description** through **What's next**. Do not paste the final links/checklist notes. |
-| Built with | `DataHub MCP Server`, `Model Context Protocol`, `Python 3.11`, `Snowflake DDL`, `dbt`, `Docker`, `GitHub Actions`, `HTML`, `CSS`, `JavaScript` |
+| Built with | `DataHub OSS / Core Platform`, `DataHub MCP Server`, `Model Context Protocol`, `Python 3.11`, `Snowflake DDL`, `dbt`, `Docker`, `GitHub Actions`, `HTML`, `CSS`, `JavaScript` |
 | Public repository | `https://github.com/sohamkamat28/ripplecheck` |
 | Project URL | `https://github.com/sohamkamat28/ripplecheck` — the host explicitly permits a repository with clear setup instructions; replace only if a public deployment is verified |
 | Sample outputs | `https://github.com/sohamkamat28/ripplecheck/tree/main/examples` |
@@ -24,7 +24,7 @@ Use this page while completing the submission form. It reflects the live form fe
 | 27838 | Yes | Public code repository | `https://github.com/sohamkamat28/ripplecheck` |
 | 27837 | No | Easy-access Project URL | `https://github.com/sohamkamat28/ripplecheck` unless a verified public deployment is available |
 | 27839 | No | Generated-artifact examples | `https://github.com/sohamkamat28/ripplecheck/tree/main/examples` |
-| 27767 | Yes | DataHub technologies used | Select `DataHub MCP Server`. Select `DataHub OSS / Core Platform` only after a live local DataHub run has been completed and documented. Do not select ACK, Skills, or Analytics Agent. |
+| 27767 | Yes | DataHub technologies used | Select both `DataHub OSS / Core Platform` and `DataHub MCP Server`. Both completed a documented live read/write run. Do not select ACK, Skills, or Analytics Agent. |
 | 27768 | No | DataHub contribution | Leave blank. No upstream contribution is claimed. |
 | 27840 | Yes | Country of residence | **ENTRANT MUST SELECT:** choose the actual country for every team member. Do not infer this from location or timezone. |
 | 27841 | Yes | Newly created July 6–Aug 10? | Select `Yes, newly created during the Submission Period` only after personally confirming [`DISCLOSURES.md`](DISCLOSURES.md). |
@@ -33,15 +33,15 @@ Use this page while completing the submission form. It reflects the live form fe
 
 ## Feedback Prize answers
 
-These answers are written to be actionable without claiming a live setup that did not occur. Edit them if your personal experience differs.
+These answers reflect the completed local DataHub OSS + official MCP setup and are written to be specific and actionable. Edit them only if your personal experience differs.
 
 ### 27844 — What felt polished or useful?
 
-The MCP tool split was useful for agent design: search resolves a catalog entity, schema fields verify the exact contract, lineage exposes downstream paths, batch entity lookup adds ownership and governance context, and description update provides a durable handoff. That sequence maps naturally to an evidence-first agent workflow. The challenge examples also made it clear that a strong agent should take bounded action and write knowledge back, rather than stop at a chat response.
+The MCP tool split was useful for agent design: search resolved a catalog entity, schema fields verified the exact contract, lineage exposed downstream paths, batch entity lookup added ownership and governance context, and description update provided a durable handoff. In the live test, that sequence let Ripplecheck find 23 downstream assets and successfully append its result to the source column. It maps naturally to an evidence-first agent workflow instead of stopping at a chat response.
 
 ### 27845 — Where did you get stuck or lose time?
 
-The largest gap for an offline-first build was the distance between reading the MCP documentation and proving the same workflow against a small local DataHub instance. A single minimal guide that starts DataHub, ingests a tiny lineage-rich sample, launches the official MCP server, lists its exact tool names and argument shapes, and runs one JSON-RPC smoke test would remove a great deal of uncertainty. Clear version compatibility between DataHub OSS and the MCP package would also help.
+The largest time cost was assembling the smallest supported local path across separate pages: DataHub OSS Quickstart, sample ingestion, personal access tokens, the current `uvx mcp-server-datahub@latest` command, mutation opt-in, and the exact response envelopes. A single version-pinned guide that starts DataHub, loads `showcase-ecommerce`, creates or explains the token, launches MCP, and runs one read plus one write smoke test would remove uncertainty. Expected payload examples would also make transport integration faster.
 
 ### 27846 — What would you build or fix first?
 
@@ -49,7 +49,7 @@ I would ship a lightweight local “agent lab”: a small, version-pinned DataHu
 
 ### 27847 — Bugs or unexpected behavior
 
-No reproducible DataHub product defect is claimed. The main issue was setup ambiguity: it was not obvious from one page which exact local versions, MCP launch command, tool schemas and writeback permissions formed the smallest supported end-to-end path. Expected: one copy-paste local smoke test. Observed: the pieces had to be assembled across multiple pages. A versioned quickstart with expected request and response examples would make failures much easier to distinguish from configuration errors.
+On a fresh DataHub OSS 1.6.0 Docker Quickstart, `datahub init --username datahub --password datahub` failed with `'NoneType' object has no attribute 'get'`. The GMS log showed the default `datahub` user was unauthorized to create a personal access token, while the generated quickstart environment had metadata-service authentication disabled. Expected: initialization should either create the token, clearly explain that no token is needed in auth-disabled local mode, or report the permission problem directly. Observed: the CLI surfaced an unrelated `NoneType` error. The MCP run itself worked after supplying the required token variable with a non-secret placeholder in this auth-disabled local instance.
 
 ## Personal confirmations before final submission
 
@@ -62,4 +62,3 @@ No reproducible DataHub product defect is claimed. The main issue was setup ambi
 - [ ] The video is public, under three minutes, shows the working product, and contains no unlicensed music, marks, or footage.
 - [ ] Every submitted URL works in an incognito window without login or payment.
 - [ ] The final preview is correct, the entry is submitted before August 11, 2026 at 2:30 AM IST, and proof of receipt is saved.
-
