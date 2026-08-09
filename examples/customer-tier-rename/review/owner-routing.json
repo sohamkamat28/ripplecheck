@@ -1,0 +1,82 @@
+{
+  "capsule_id": "RC-4AC01328A4AA",
+  "release_gate": {
+    "blockers": [
+      "RC-001",
+      "RC-007",
+      "RC-021",
+      "RC-032"
+    ],
+    "passed": [
+      "RC-044"
+    ],
+    "release_condition": "Migrate every active consumer, reach 100% ownership, and rerun this capsule.",
+    "required_approvals": [
+      "data owner",
+      "downstream owners"
+    ],
+    "status": "CLOSED",
+    "warnings": [
+      "RC-013"
+    ]
+  },
+  "routes": [
+    {
+      "asset": "airflow.customer_segmentation",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "airflow.customer_segmentation"
+      ],
+      "owners": [
+        "marketing-data@northstar.example"
+      ],
+      "required_action": "migrate consumer and attest parity"
+    },
+    {
+      "asset": "dbt.marts.customer_retention",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "dbt.marts.customer_retention"
+      ],
+      "owners": [
+        "growth-analytics@northstar.example"
+      ],
+      "required_action": "migrate consumer and attest parity"
+    },
+    {
+      "asset": "mlflow.churn_risk_v3",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "mlflow.churn_risk_v3"
+      ],
+      "owners": [
+        "ml-retention@northstar.example"
+      ],
+      "required_action": "migrate consumer and attest parity"
+    },
+    {
+      "asset": "looker.executive_growth",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "dbt.marts.customer_retention",
+        "looker.executive_growth"
+      ],
+      "owners": [
+        "bi-core@northstar.example"
+      ],
+      "required_action": "migrate consumer and attest parity"
+    },
+    {
+      "asset": "tableau.retention_operations",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "dbt.marts.customer_retention",
+        "tableau.retention_operations"
+      ],
+      "owners": [
+        "UNOWNED"
+      ],
+      "required_action": "migrate consumer and attest parity"
+    }
+  ]
+}

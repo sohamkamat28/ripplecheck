@@ -1,0 +1,107 @@
+{
+  "artifact_manifest": [
+    {
+      "path": "migration/compatibility_view.sql",
+      "purpose": "Zero-downtime compatibility SQL",
+      "status": "generated"
+    },
+    {
+      "path": "models/monthly_revenue/schema.yml",
+      "purpose": "dbt model contract patch",
+      "status": "generated"
+    },
+    {
+      "path": "tests/assert_net_revenue_compatibility.sql",
+      "purpose": "Parity gate test",
+      "status": "generated"
+    },
+    {
+      "path": "review/ripplecheck-decision.md",
+      "purpose": "Human-readable PR decision",
+      "status": "generated"
+    },
+    {
+      "path": "review/owner-routing.json",
+      "purpose": "Machine-readable owner routing",
+      "status": "generated"
+    },
+    {
+      "path": "manifest/change-capsule.json",
+      "purpose": "Reproducible evidence manifest",
+      "status": "generated"
+    }
+  ],
+  "capsule_id": "RC-DAE79F33A169",
+  "catalog_snapshot": "retail-analytics-demo",
+  "compiler": "ripplecheck/2.0",
+  "deterministic": true,
+  "evidence_sha256": "804bd815828814b248e4218495f304cf8fc849d19ab68647cf5c76b76df2d6b6",
+  "input_sha256": "dae79f33a169ce36fd23e286ffee70e166ed9aef5040702fca302ad4f5bc1d23",
+  "policy_proof": [
+    {
+      "evidence": "1 active column-lineage edges found across the inspected graph.",
+      "id": "RC-001",
+      "status": "FAIL",
+      "title": "Breaking changes need zero active consumers"
+    },
+    {
+      "evidence": "1 affected assets carry the Critical tag.",
+      "id": "RC-007",
+      "status": "FAIL",
+      "title": "Critical consumers require an explicit migration"
+    },
+    {
+      "evidence": "0 affected assets have no DataHub owner.",
+      "id": "RC-013",
+      "status": "PASS",
+      "title": "Every affected asset must have an accountable owner"
+    },
+    {
+      "evidence": "0 production ML consumer uses the proposed field.",
+      "id": "RC-021",
+      "status": "PASS",
+      "title": "Production ML inputs cannot change without feature migration"
+    },
+    {
+      "evidence": "Direct DDL has no compatibility window or rollback gate.",
+      "id": "RC-032",
+      "status": "FAIL",
+      "title": "The rollout must be backward compatible and reversible"
+    },
+    {
+      "evidence": "DataHub evidence loaded for tags: Critical, Financial.",
+      "id": "RC-044",
+      "status": "PASS",
+      "title": "Governed fields require catalog evidence"
+    }
+  ],
+  "release_gate": {
+    "blockers": [
+      "RC-001",
+      "RC-007",
+      "RC-032"
+    ],
+    "passed": [
+      "RC-013",
+      "RC-021",
+      "RC-044"
+    ],
+    "release_condition": "Migrate every active consumer, reach 100% ownership, and rerun this capsule.",
+    "required_approvals": [
+      "data owner",
+      "downstream owners"
+    ],
+    "status": "CLOSED",
+    "warnings": []
+  },
+  "request": {
+    "action": "rename",
+    "column": "net_revenue",
+    "dataset": "warehouse.finance.monthly_revenue",
+    "raw": "ALTER TABLE warehouse.finance.monthly_revenue RENAME COLUMN net_revenue TO recognized_revenue;",
+    "replacement": "recognized_revenue",
+    "target_type": null
+  },
+  "schema_version": "1.0",
+  "transport": "DataHub MCP tool contract"
+}

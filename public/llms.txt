@@ -1,0 +1,15 @@
+# Ripplecheck
+
+> Ripplecheck compiles breaking warehouse DDL into a DataHub-backed counterfactual, policy proof, migration DAG, and PR pack.
+
+## Key routes
+
+- [Interactive demo](/)
+- [Health check](/health)
+- [Demo scenarios](/api/scenarios)
+
+## Agent behavior
+
+Ripplecheck resolves a dataset, verifies a column, traces exact downstream lineage paths, loads owners and criticality, projects the graph after a proposed change, proves stable release rules, compiles owner-routed migration work, generates a six-file ZIP, and optionally writes a hash-sealed capsule back to DataHub.
+
+The public demo uses a synthetic offline DataHub snapshot and requires no key or paid service. Live mode connects to the official DataHub MCP Server.

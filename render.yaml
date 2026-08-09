@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ripplecheck
+    runtime: python
+    plan: free
+    buildCommand: python3 -m compileall -q main.py src
+    startCommand: python3 main.py web
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: RIPPLECHECK_MODE
+        value: fixture

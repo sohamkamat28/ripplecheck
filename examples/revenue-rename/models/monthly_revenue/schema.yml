@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: monthly_revenue
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: net_revenue
+        data_type: number(18,2)
+        description: Compatibility field; remove only after Ripplecheck gate G1 opens.
+        meta:
+          deprecated: true
+          replacement: recognized_revenue
+      - name: recognized_revenue
+        data_type: number(18,2)
+        description: Replacement field generated from the approved schema migration.

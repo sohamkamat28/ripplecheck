@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f2ef">
+    <meta name="description" content="Ripplecheck compiles breaking warehouse DDL into a DataHub-backed policy proof, migration DAG, and merge-ready evidence pack.">
+    <meta property="og:title" content="Ripplecheck | Counterfactual migration compiler">
+    <meta property="og:description" content="Turn breaking DDL into a provable, owner-routed migration plan with DataHub MCP.">
+    <title>Ripplecheck | Counterfactual migration compiler</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css?v=3">
+    <script src="/app.js?v=3" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to migration compiler</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Ripplecheck home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Ripplecheck</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#workspace-panel">Product</a>
+        <a href="#proof-title">How it works</a>
+        <a href="/health">Status</a>
+      </nav>
+      <div class="header-meta" aria-label="Demo mode">
+        <span class="status-dot">Offline graph ready</span>
+        <span aria-hidden="true">→</span>
+      </div>
+    </header>
+
+    <main id="workspace">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Counterfactual schema migration compiler</p>
+        <h1 id="page-title">Compile the change before it compiles you.</h1>
+        <p class="lede">Project warehouse DDL against the metadata graph.<br>Prove the release gate. Ship the migration pack.</p>
+        <a class="hero-action-shell" href="#change-input"><span><b aria-hidden="true">+</b> Compile migration plan</span></a>
+      </section>
+
+      <section id="workspace-panel" class="app-shell" aria-label="Schema migration compilation workspace">
+        <div class="input-pane">
+          <div class="pane-heading">
+            <h2>Proposed DDL</h2>
+            <span>Snowflake</span>
+          </div>
+          <form id="change-form">
+            <label for="change-input">Paste a warehouse schema change</label>
+            <textarea id="change-input" name="change" rows="6" spellcheck="false" aria-describedby="change-help">ALTER TABLE warehouse.analytics.customer_360
+RENAME COLUMN customer_tier TO loyalty_tier;</textarea>
+            <p id="change-help" class="help">Also accepts plain-language drops, renames, type changes, and deprecations.</p>
+            <label class="check-row" for="writeback-input">
+              <input id="writeback-input" type="checkbox" checked>
+              <span>Persist the hash-sealed decision capsule to DataHub</span>
+            </label>
+            <button class="primary-button" type="submit">
+              <span>Compile migration plan</span>
+              <span aria-hidden="true">↗</span>
+            </button>
+          </form>
+
+          <div class="scenario-block">
+            <div class="section-label">
+              <h3>Judge paths</h3>
+              <span>3 fixtures</span>
+            </div>
+            <div id="scenario-list" class="scenario-list" aria-live="polite"></div>
+          </div>
+
+          <div class="compiler-contract" aria-label="Compiler contract">
+            <span>INPUT</span>
+            <code>DDL + metadata graph</code>
+            <span>OUTPUT</span>
+            <code>proof + DAG + PR pack</code>
+          </div>
+        </div>
+
+        <div class="result-pane">
+          <div class="pane-heading">
+            <h2>Release evidence</h2>
+            <span id="run-label">Awaiting compile</span>
+          </div>
+          <div id="result" class="result" aria-live="polite">
+            <div class="empty-state">
+              <div class="empty-diagram" aria-hidden="true">
+                <span>DDL</span><i></i><span>GRAPH</span><i></i><span>PACK</span>
+              </div>
+              <p class="empty-kicker">Graph preview</p>
+              <h3>Your migration evidence will appear here.</h3>
+              <p>Compile once to project failure paths, prove the gate, route the execution DAG, and generate the PR pack.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof" aria-labelledby="proof-title">
+        <p class="eyebrow">Why this is different</p>
+        <h2 id="proof-title">Not another catalog chatbot.</h2>
+        <div class="proof-grid">
+          <div>
+            <span class="proof-number">01</span>
+            <strong>Counterfactual graph</strong>
+            <p>Projects the after-state and names each expected failure before DDL runs.</p>
+          </div>
+          <div>
+            <span class="proof-number">02</span>
+            <strong>Policy as evidence</strong>
+            <p>Stable rule IDs make every block auditable, reproducible, and CI-friendly.</p>
+          </div>
+          <div>
+            <span class="proof-number">03</span>
+            <strong>Executable handoff</strong>
+            <p>Compiles compatibility SQL, dbt contracts, parity tests, routing, and a hash-sealed capsule.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built for the DataHub Agent Hackathon. Apache 2.0.</p>
+      <div><a href="/health">Health</a><span> / </span><a href="https://github.com/acryldata/mcp-server-datahub">Official MCP server</a></div>
+    </footer>
+  </body>
+</html>

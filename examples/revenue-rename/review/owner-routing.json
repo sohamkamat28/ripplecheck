@@ -1,0 +1,35 @@
+{
+  "capsule_id": "RC-DAE79F33A169",
+  "release_gate": {
+    "blockers": [
+      "RC-001",
+      "RC-007",
+      "RC-032"
+    ],
+    "passed": [
+      "RC-013",
+      "RC-021",
+      "RC-044"
+    ],
+    "release_condition": "Migrate every active consumer, reach 100% ownership, and rerun this capsule.",
+    "required_approvals": [
+      "data owner",
+      "downstream owners"
+    ],
+    "status": "CLOSED",
+    "warnings": []
+  },
+  "routes": [
+    {
+      "asset": "looker.finance_close",
+      "lineage_path": [
+        "warehouse.finance.monthly_revenue",
+        "looker.finance_close"
+      ],
+      "owners": [
+        "finance-bi@northstar.example"
+      ],
+      "required_action": "migrate consumer and attest parity"
+    }
+  ]
+}

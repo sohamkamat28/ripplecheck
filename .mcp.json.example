@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ripplecheck": {
+      "command": "python3",
+      "args": ["/absolute/path/to/ripplecheck/main.py", "mcp"],
+      "env": {
+        "RIPPLECHECK_MODE": "fixture"
+      }
+    }
+  }
+}
+

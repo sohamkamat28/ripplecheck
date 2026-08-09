@@ -1,0 +1,264 @@
+{
+  "run_id": "232c729663",
+  "request": {
+    "raw": "Drop column legacy_bucket from warehouse.sandbox.experiment_flags",
+    "action": "drop",
+    "dataset": "warehouse.sandbox.experiment_flags",
+    "column": "legacy_bucket",
+    "replacement": null,
+    "target_type": null
+  },
+  "decision": "SAFE",
+  "risk_score": 0,
+  "headline": "No downstream blockers found for legacy_bucket.",
+  "rationale": [
+    "DataHub returned no downstream dependencies for this column."
+  ],
+  "source": {
+    "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.sandbox.experiment_flags,DEV)",
+    "name": "warehouse.sandbox.experiment_flags",
+    "type": "dataset",
+    "platform": "snowflake",
+    "description": "Development-only experiment flag snapshot.",
+    "owners": [
+      "experimentation@northstar.example"
+    ],
+    "tags": [
+      "Development"
+    ],
+    "domain": "Sandbox",
+    "field": {
+      "name": "legacy_bucket",
+      "type": "STRING",
+      "tags": [
+        "Deprecated"
+      ],
+      "description": "Unused legacy allocation bucket."
+    }
+  },
+  "blast_radius": [],
+  "owners_to_notify": [],
+  "remediation_plan": [
+    "Proceed through the normal schema-change review.",
+    "Run contract tests and refresh DataHub lineage after deployment."
+  ],
+  "counterfactual": {
+    "engine": "metadata-graph-counterfactual/v1",
+    "mode": "non-mutating projection",
+    "before": {
+      "field": "legacy_bucket",
+      "type": "STRING",
+      "status": "present",
+      "consumer_edges": 0
+    },
+    "after": {
+      "field": "REMOVED",
+      "type": "STRING",
+      "status": "removed",
+      "broken_edges": 0
+    },
+    "metrics": {
+      "assets_inspected": 0,
+      "broken_edges": 0,
+      "critical_consumers": 0,
+      "max_lineage_hops": 0,
+      "owned_assets": 0,
+      "ownership_coverage": 100
+    },
+    "predicted_failures": []
+  },
+  "policy_proof": [
+    {
+      "id": "RC-001",
+      "title": "Breaking changes need zero active consumers",
+      "status": "PASS",
+      "evidence": "0 active column-lineage edges found across the inspected graph."
+    },
+    {
+      "id": "RC-007",
+      "title": "Critical consumers require an explicit migration",
+      "status": "PASS",
+      "evidence": "0 affected assets carry the Critical tag."
+    },
+    {
+      "id": "RC-013",
+      "title": "Every affected asset must have an accountable owner",
+      "status": "PASS",
+      "evidence": "0 affected assets have no DataHub owner."
+    },
+    {
+      "id": "RC-021",
+      "title": "Production ML inputs cannot change without feature migration",
+      "status": "PASS",
+      "evidence": "0 production ML consumer uses the proposed field."
+    },
+    {
+      "id": "RC-032",
+      "title": "The rollout must be backward compatible and reversible",
+      "status": "PASS",
+      "evidence": "No incompatible downstream edge was found."
+    },
+    {
+      "id": "RC-044",
+      "title": "Governed fields require catalog evidence",
+      "status": "PASS",
+      "evidence": "DataHub evidence loaded."
+    }
+  ],
+  "execution_plan": [
+    {
+      "id": "G0",
+      "action": "Freeze direct DDL",
+      "depends_on": [],
+      "actor": "Ripplecheck policy",
+      "state": "ready",
+      "evidence": "Prevent the breaking statement from entering the deploy queue."
+    },
+    {
+      "id": "M1",
+      "action": "Deprecate legacy_bucket in contracts",
+      "depends_on": [
+        "G0"
+      ],
+      "actor": "data-platform@northstar.example",
+      "state": "ready",
+      "evidence": "Keep legacy_bucket available while downstream consumers migrate or attest non-use."
+    },
+    {
+      "id": "M2",
+      "action": "Publish compatibility layer",
+      "depends_on": [
+        "M1"
+      ],
+      "actor": "data-platform@northstar.example",
+      "state": "ready",
+      "evidence": "Dual-read both names and backfill until parity is proven."
+    },
+    {
+      "id": "V1",
+      "action": "Prove parity and lineage convergence",
+      "depends_on": [
+        "M2"
+      ],
+      "actor": "release automation",
+      "state": "waiting",
+      "evidence": "Require zero failed consumers, contract-test parity, and a fresh DataHub lineage run."
+    },
+    {
+      "id": "G1",
+      "action": "Retire legacy_bucket",
+      "depends_on": [
+        "V1"
+      ],
+      "actor": "data owner approval",
+      "state": "approval required",
+      "evidence": "Open the release gate only after the compatibility window and rollback check pass."
+    }
+  ],
+  "artifact_manifest": [
+    {
+      "path": "migration/compatibility_view.sql",
+      "purpose": "Zero-downtime compatibility SQL",
+      "status": "generated"
+    },
+    {
+      "path": "models/experiment_flags/schema.yml",
+      "purpose": "dbt model contract patch",
+      "status": "generated"
+    },
+    {
+      "path": "tests/assert_legacy_bucket_compatibility.sql",
+      "purpose": "Parity gate test",
+      "status": "generated"
+    },
+    {
+      "path": "review/ripplecheck-decision.md",
+      "purpose": "Human-readable PR decision",
+      "status": "generated"
+    },
+    {
+      "path": "review/owner-routing.json",
+      "purpose": "Machine-readable owner routing",
+      "status": "generated"
+    },
+    {
+      "path": "manifest/change-capsule.json",
+      "purpose": "Reproducible evidence manifest",
+      "status": "generated"
+    }
+  ],
+  "change_capsule": {
+    "capsule_id": "RC-E10A9BC94150",
+    "schema_version": "1.0",
+    "compiler": "ripplecheck/2.0",
+    "deterministic": true,
+    "input_sha256": "e10a9bc941504125d00d8b5bc230695c8e23d2af94d58288f747783d7dabda71",
+    "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "catalog_snapshot": "retail-analytics-demo",
+    "transport": "DataHub MCP tool contract"
+  },
+  "release_gate": {
+    "status": "OPEN",
+    "blockers": [],
+    "warnings": [],
+    "passed": [
+      "RC-001",
+      "RC-007",
+      "RC-013",
+      "RC-021",
+      "RC-032",
+      "RC-044"
+    ],
+    "required_approvals": [],
+    "release_condition": "Evidence satisfies the bounded schema-change policy."
+  },
+  "tool_trace": [
+    {
+      "tool": "search",
+      "arguments": {
+        "query": "/q warehouse+sandbox+experiment_flags",
+        "num_results": 8
+      },
+      "summary": "Resolved the proposed dataset against the DataHub catalog."
+    },
+    {
+      "tool": "list_schema_fields",
+      "arguments": {
+        "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.sandbox.experiment_flags,DEV)",
+        "keywords": [
+          "legacy_bucket"
+        ],
+        "limit": 20
+      },
+      "summary": "Confirmed whether column legacy_bucket exists and loaded its governance tags."
+    },
+    {
+      "tool": "get_lineage",
+      "arguments": {
+        "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.sandbox.experiment_flags,DEV)",
+        "column": "legacy_bucket",
+        "upstream": false,
+        "max_hops": 3,
+        "max_results": 50
+      },
+      "summary": "Traced column-level downstream lineage through three hops."
+    },
+    {
+      "tool": "update_description",
+      "arguments": {
+        "entity_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.sandbox.experiment_flags,DEV)",
+        "operation": "append",
+        "description": "\n\n### Ripplecheck decision\n```json\n{\n  \"run_id\": \"232c729663\",\n  \"decision\": \"SAFE\",\n  \"risk_score\": 0,\n  \"proposed_change\": \"Drop column legacy_bucket from warehouse.sandbox.experiment_flags\",\n  \"downstream_assets\": [],\n  \"owners_to_notify\": [],\n  \"capsule_id\": \"RC-E10A9BC94150\",\n  \"evidence_sha256\": \"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\n  \"release_gate\": \"OPEN\",\n  \"policy_blockers\": []\n}\n```",
+        "column_path": "legacy_bucket"
+      },
+      "summary": "Appended the assessment to the source column so the next agent inherits it."
+    }
+  ],
+  "writeback": {
+    "success": true,
+    "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.sandbox.experiment_flags,DEV)",
+    "column_path": "legacy_bucket",
+    "message": "Decision record captured by the offline DataHub fixture.",
+    "mode": "fixture"
+  }
+}

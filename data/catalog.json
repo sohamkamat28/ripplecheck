@@ -1,0 +1,140 @@
+{
+  "snapshot": "retail-analytics-demo",
+  "generated_for": "Build with DataHub: The Agent Hackathon",
+  "entities": [
+    {
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.analytics.customer_360,PROD)",
+      "name": "warehouse.analytics.customer_360",
+      "type": "dataset",
+      "platform": "snowflake",
+      "domain": "Customer Analytics",
+      "description": "Canonical customer profile used by retention analytics and churn scoring.",
+      "owners": ["data-platform@northstar.example"],
+      "tags": ["Critical", "Tier1"],
+      "fields": [
+        {"name": "customer_id", "type": "STRING", "tags": ["PrimaryKey"], "description": "Stable customer identifier."},
+        {"name": "email", "type": "STRING", "tags": ["PII"], "description": "Primary contact email."},
+        {"name": "customer_tier", "type": "STRING", "tags": ["Critical"], "description": "Current loyalty tier used for segmentation."},
+        {"name": "lifetime_value", "type": "NUMBER(18,2)", "tags": ["Financial"], "description": "Modeled customer lifetime value."},
+        {"name": "updated_at", "type": "TIMESTAMP", "tags": [], "description": "Latest profile update time."}
+      ],
+      "downstream": [
+        {"urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,dbt.marts.customer_retention,PROD)", "columns": ["customer_id", "customer_tier", "lifetime_value"]},
+        {"urn": "urn:li:dataFlow:(airflow,customer_segmentation,PROD)", "columns": ["customer_tier"]},
+        {"urn": "urn:li:mlModel:(urn:li:dataPlatform:mlflow,churn_risk_v3,PROD)", "columns": ["customer_tier", "lifetime_value"]}
+      ]
+    },
+    {
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,dbt.marts.customer_retention,PROD)",
+      "name": "dbt.marts.customer_retention",
+      "type": "dataset",
+      "platform": "dbt",
+      "domain": "Customer Analytics",
+      "description": "Weekly retention cohorts segmented by loyalty tier.",
+      "owners": ["growth-analytics@northstar.example"],
+      "tags": ["Critical", "Certified"],
+      "fields": [
+        {"name": "cohort_week", "type": "DATE", "tags": [], "description": "Cohort start week."},
+        {"name": "customer_tier", "type": "STRING", "tags": ["Critical"], "description": "Loyalty tier at observation time."},
+        {"name": "retained_customers", "type": "NUMBER", "tags": [], "description": "Customers retained in the period."}
+      ],
+      "downstream": [
+        {"urn": "urn:li:dashboard:(looker,executive_growth)", "columns": ["customer_tier"]},
+        {"urn": "urn:li:dashboard:(tableau,retention_operations)", "columns": ["customer_tier"]}
+      ]
+    },
+    {
+      "urn": "urn:li:dataFlow:(airflow,customer_segmentation,PROD)",
+      "name": "airflow.customer_segmentation",
+      "type": "dataFlow",
+      "platform": "airflow",
+      "domain": "Customer Analytics",
+      "description": "Nightly audience segmentation workflow.",
+      "owners": ["marketing-data@northstar.example"],
+      "tags": ["Tier1"],
+      "fields": [],
+      "downstream": []
+    },
+    {
+      "urn": "urn:li:mlModel:(urn:li:dataPlatform:mlflow,churn_risk_v3,PROD)",
+      "name": "mlflow.churn_risk_v3",
+      "type": "mlModel",
+      "platform": "mlflow",
+      "domain": "Machine Learning",
+      "description": "Production churn model used for retention offers.",
+      "owners": ["ml-retention@northstar.example"],
+      "tags": ["Critical", "Production"],
+      "fields": [],
+      "downstream": []
+    },
+    {
+      "urn": "urn:li:dashboard:(looker,executive_growth)",
+      "name": "looker.executive_growth",
+      "type": "dashboard",
+      "platform": "looker",
+      "domain": "Executive Reporting",
+      "description": "Executive growth and retention scorecard.",
+      "owners": ["bi-core@northstar.example"],
+      "tags": ["Critical", "Executive"],
+      "fields": [],
+      "downstream": []
+    },
+    {
+      "urn": "urn:li:dashboard:(tableau,retention_operations)",
+      "name": "tableau.retention_operations",
+      "type": "dashboard",
+      "platform": "tableau",
+      "domain": "Customer Operations",
+      "description": "Operational retention queue and tier movement dashboard.",
+      "owners": [],
+      "tags": ["Tier2"],
+      "fields": [],
+      "downstream": []
+    },
+    {
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.finance.monthly_revenue,PROD)",
+      "name": "warehouse.finance.monthly_revenue",
+      "type": "dataset",
+      "platform": "snowflake",
+      "domain": "Finance",
+      "description": "Certified monthly revenue aggregate.",
+      "owners": ["finance-data@northstar.example"],
+      "tags": ["Certified", "Critical"],
+      "fields": [
+        {"name": "month", "type": "DATE", "tags": [], "description": "Revenue month."},
+        {"name": "net_revenue", "type": "NUMBER(18,2)", "tags": ["Financial", "Critical"], "description": "Net recognized revenue."},
+        {"name": "gross_revenue", "type": "NUMBER(18,2)", "tags": ["Financial"], "description": "Gross recognized revenue."}
+      ],
+      "downstream": [
+        {"urn": "urn:li:dashboard:(looker,finance_close)", "columns": ["net_revenue", "gross_revenue"]}
+      ]
+    },
+    {
+      "urn": "urn:li:dashboard:(looker,finance_close)",
+      "name": "looker.finance_close",
+      "type": "dashboard",
+      "platform": "looker",
+      "domain": "Finance",
+      "description": "Month-end financial close dashboard.",
+      "owners": ["finance-bi@northstar.example"],
+      "tags": ["Critical", "Executive"],
+      "fields": [],
+      "downstream": []
+    },
+    {
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.sandbox.experiment_flags,DEV)",
+      "name": "warehouse.sandbox.experiment_flags",
+      "type": "dataset",
+      "platform": "snowflake",
+      "domain": "Sandbox",
+      "description": "Development-only experiment flag snapshot.",
+      "owners": ["experimentation@northstar.example"],
+      "tags": ["Development"],
+      "fields": [
+        {"name": "experiment_id", "type": "STRING", "tags": [], "description": "Experiment identifier."},
+        {"name": "legacy_bucket", "type": "STRING", "tags": ["Deprecated"], "description": "Unused legacy allocation bucket."}
+      ],
+      "downstream": []
+    }
+  ]
+}

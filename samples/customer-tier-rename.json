@@ -1,0 +1,500 @@
+{
+  "run_id": "967ea7bf95",
+  "request": {
+    "raw": "ALTER TABLE warehouse.analytics.customer_360 RENAME COLUMN customer_tier TO loyalty_tier;",
+    "action": "rename",
+    "dataset": "warehouse.analytics.customer_360",
+    "column": "customer_tier",
+    "replacement": "loyalty_tier",
+    "target_type": null
+  },
+  "decision": "BLOCK",
+  "risk_score": 10,
+  "headline": "Block the change. Renaming customer_tier impacts 5 assets.",
+  "rationale": [
+    "DataHub column lineage found 5 downstream assets across 2 hops.",
+    "3 affected assets are tagged Critical.",
+    "2 affected dashboards expose the change to consumers.",
+    "1 production ML asset consumes the column.",
+    "1 affected asset has no owner recorded in DataHub."
+  ],
+  "source": {
+    "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.analytics.customer_360,PROD)",
+    "name": "warehouse.analytics.customer_360",
+    "type": "dataset",
+    "platform": "snowflake",
+    "description": "Canonical customer profile used by retention analytics and churn scoring.",
+    "owners": [
+      "data-platform@northstar.example"
+    ],
+    "tags": [
+      "Critical",
+      "Tier1"
+    ],
+    "domain": "Customer Analytics",
+    "field": {
+      "name": "customer_tier",
+      "type": "STRING",
+      "tags": [
+        "Critical"
+      ],
+      "description": "Current loyalty tier used for segmentation."
+    }
+  },
+  "blast_radius": [
+    {
+      "urn": "urn:li:dataFlow:(airflow,customer_segmentation,PROD)",
+      "name": "airflow.customer_segmentation",
+      "type": "dataFlow",
+      "platform": "airflow",
+      "degree": 1,
+      "owners": [
+        "marketing-data@northstar.example"
+      ],
+      "tags": [
+        "Tier1"
+      ],
+      "impact": "Scheduled transformation may fail",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "airflow.customer_segmentation"
+      ]
+    },
+    {
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,dbt.marts.customer_retention,PROD)",
+      "name": "dbt.marts.customer_retention",
+      "type": "dataset",
+      "platform": "dbt",
+      "degree": 1,
+      "owners": [
+        "growth-analytics@northstar.example"
+      ],
+      "tags": [
+        "Critical",
+        "Certified"
+      ],
+      "impact": "Derived dataset may fail to build",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "dbt.marts.customer_retention"
+      ]
+    },
+    {
+      "urn": "urn:li:mlModel:(urn:li:dataPlatform:mlflow,churn_risk_v3,PROD)",
+      "name": "mlflow.churn_risk_v3",
+      "type": "mlModel",
+      "platform": "mlflow",
+      "degree": 1,
+      "owners": [
+        "ml-retention@northstar.example"
+      ],
+      "tags": [
+        "Critical",
+        "Production"
+      ],
+      "impact": "Production feature input may drift or disappear",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "mlflow.churn_risk_v3"
+      ]
+    },
+    {
+      "urn": "urn:li:dashboard:(looker,executive_growth)",
+      "name": "looker.executive_growth",
+      "type": "dashboard",
+      "platform": "looker",
+      "degree": 2,
+      "owners": [
+        "bi-core@northstar.example"
+      ],
+      "tags": [
+        "Critical",
+        "Executive"
+      ],
+      "impact": "Executive metric may fail or become stale",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "dbt.marts.customer_retention",
+        "looker.executive_growth"
+      ]
+    },
+    {
+      "urn": "urn:li:dashboard:(tableau,retention_operations)",
+      "name": "tableau.retention_operations",
+      "type": "dashboard",
+      "platform": "tableau",
+      "degree": 2,
+      "owners": [],
+      "tags": [
+        "Tier2"
+      ],
+      "impact": "Executive metric may fail or become stale",
+      "lineage_path": [
+        "warehouse.analytics.customer_360",
+        "dbt.marts.customer_retention",
+        "tableau.retention_operations"
+      ]
+    }
+  ],
+  "owners_to_notify": [
+    "bi-core@northstar.example",
+    "growth-analytics@northstar.example",
+    "marketing-data@northstar.example",
+    "ml-retention@northstar.example"
+  ],
+  "remediation_plan": [
+    "Pause the breaking migration before merge or deployment.",
+    "Add loyalty_tier beside customer_tier and maintain both during migration.",
+    "Notify: bi-core@northstar.example, growth-analytics@northstar.example, marketing-data@northstar.example, ml-retention@northstar.example.",
+    "Update downstream assets, then rerun Ripplecheck until the decision is SAFE."
+  ],
+  "counterfactual": {
+    "engine": "metadata-graph-counterfactual/v1",
+    "mode": "non-mutating projection",
+    "before": {
+      "field": "customer_tier",
+      "type": "STRING",
+      "status": "present",
+      "consumer_edges": 5
+    },
+    "after": {
+      "field": "loyalty_tier",
+      "type": "STRING",
+      "status": "renamed",
+      "broken_edges": 5
+    },
+    "metrics": {
+      "assets_inspected": 5,
+      "broken_edges": 5,
+      "critical_consumers": 3,
+      "max_lineage_hops": 2,
+      "owned_assets": 4,
+      "ownership_coverage": 80
+    },
+    "predicted_failures": [
+      {
+        "asset": "airflow.customer_segmentation",
+        "type": "dataFlow",
+        "severity": "high",
+        "failure_mode": "Scheduled transformation references customer_tier; task compilation can fail.",
+        "lineage_path": [
+          "warehouse.analytics.customer_360",
+          "airflow.customer_segmentation"
+        ],
+        "owner": "marketing-data@northstar.example"
+      },
+      {
+        "asset": "dbt.marts.customer_retention",
+        "type": "dataset",
+        "severity": "critical",
+        "failure_mode": "Model contract still selects customer_tier; dbt compilation can fail.",
+        "lineage_path": [
+          "warehouse.analytics.customer_360",
+          "dbt.marts.customer_retention"
+        ],
+        "owner": "growth-analytics@northstar.example"
+      },
+      {
+        "asset": "mlflow.churn_risk_v3",
+        "type": "mlModel",
+        "severity": "critical",
+        "failure_mode": "Online feature contract loses customer_tier; training-serving skew is possible.",
+        "lineage_path": [
+          "warehouse.analytics.customer_360",
+          "mlflow.churn_risk_v3"
+        ],
+        "owner": "ml-retention@northstar.example"
+      },
+      {
+        "asset": "looker.executive_growth",
+        "type": "dashboard",
+        "severity": "critical",
+        "failure_mode": "Metric query references customer_tier; tiles can error or serve stale data.",
+        "lineage_path": [
+          "warehouse.analytics.customer_360",
+          "dbt.marts.customer_retention",
+          "looker.executive_growth"
+        ],
+        "owner": "bi-core@northstar.example"
+      },
+      {
+        "asset": "tableau.retention_operations",
+        "type": "dashboard",
+        "severity": "high",
+        "failure_mode": "Metric query references customer_tier; tiles can error or serve stale data.",
+        "lineage_path": [
+          "warehouse.analytics.customer_360",
+          "dbt.marts.customer_retention",
+          "tableau.retention_operations"
+        ],
+        "owner": "UNOWNED"
+      }
+    ]
+  },
+  "policy_proof": [
+    {
+      "id": "RC-001",
+      "title": "Breaking changes need zero active consumers",
+      "status": "FAIL",
+      "evidence": "5 active column-lineage edges found across the inspected graph."
+    },
+    {
+      "id": "RC-007",
+      "title": "Critical consumers require an explicit migration",
+      "status": "FAIL",
+      "evidence": "3 affected assets carry the Critical tag."
+    },
+    {
+      "id": "RC-013",
+      "title": "Every affected asset must have an accountable owner",
+      "status": "WARN",
+      "evidence": "1 affected asset has no DataHub owner."
+    },
+    {
+      "id": "RC-021",
+      "title": "Production ML inputs cannot change without feature migration",
+      "status": "FAIL",
+      "evidence": "1 production ML consumer uses the proposed field."
+    },
+    {
+      "id": "RC-032",
+      "title": "The rollout must be backward compatible and reversible",
+      "status": "FAIL",
+      "evidence": "Direct DDL has no compatibility window or rollback gate."
+    },
+    {
+      "id": "RC-044",
+      "title": "Governed fields require catalog evidence",
+      "status": "PASS",
+      "evidence": "DataHub evidence loaded for tags: Critical, Tier1."
+    }
+  ],
+  "execution_plan": [
+    {
+      "id": "G0",
+      "action": "Freeze direct DDL",
+      "depends_on": [],
+      "actor": "Ripplecheck policy",
+      "state": "blocked",
+      "evidence": "Prevent the breaking statement from entering the deploy queue."
+    },
+    {
+      "id": "M1",
+      "action": "Introduce loyalty_tier",
+      "depends_on": [
+        "G0"
+      ],
+      "actor": "data-platform@northstar.example",
+      "state": "ready",
+      "evidence": "Add loyalty_tier beside customer_tier; do not remove the old contract."
+    },
+    {
+      "id": "M2",
+      "action": "Publish compatibility layer",
+      "depends_on": [
+        "M1"
+      ],
+      "actor": "data-platform@northstar.example",
+      "state": "ready",
+      "evidence": "Dual-read both names and backfill until parity is proven."
+    },
+    {
+      "id": "C1",
+      "action": "Migrate airflow.customer_segmentation",
+      "depends_on": [
+        "M2"
+      ],
+      "actor": "marketing-data@northstar.example",
+      "state": "waiting",
+      "evidence": "Scheduled transformation references customer_tier; task compilation can fail."
+    },
+    {
+      "id": "C2",
+      "action": "Migrate dbt.marts.customer_retention",
+      "depends_on": [
+        "M2"
+      ],
+      "actor": "growth-analytics@northstar.example",
+      "state": "waiting",
+      "evidence": "Model contract still selects customer_tier; dbt compilation can fail."
+    },
+    {
+      "id": "C3",
+      "action": "Migrate mlflow.churn_risk_v3",
+      "depends_on": [
+        "M2"
+      ],
+      "actor": "ml-retention@northstar.example",
+      "state": "waiting",
+      "evidence": "Online feature contract loses customer_tier; training-serving skew is possible."
+    },
+    {
+      "id": "C4",
+      "action": "Migrate looker.executive_growth",
+      "depends_on": [
+        "M2"
+      ],
+      "actor": "bi-core@northstar.example",
+      "state": "waiting",
+      "evidence": "Metric query references customer_tier; tiles can error or serve stale data."
+    },
+    {
+      "id": "C5",
+      "action": "Migrate tableau.retention_operations",
+      "depends_on": [
+        "M2"
+      ],
+      "actor": "owner required",
+      "state": "waiting",
+      "evidence": "Metric query references customer_tier; tiles can error or serve stale data."
+    },
+    {
+      "id": "V1",
+      "action": "Prove parity and lineage convergence",
+      "depends_on": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "actor": "release automation",
+      "state": "waiting",
+      "evidence": "Require zero failed consumers, contract-test parity, and a fresh DataHub lineage run."
+    },
+    {
+      "id": "G1",
+      "action": "Retire customer_tier",
+      "depends_on": [
+        "V1"
+      ],
+      "actor": "data owner approval",
+      "state": "approval required",
+      "evidence": "Open the release gate only after the compatibility window and rollback check pass."
+    }
+  ],
+  "artifact_manifest": [
+    {
+      "path": "migration/compatibility_view.sql",
+      "purpose": "Zero-downtime compatibility SQL",
+      "status": "generated"
+    },
+    {
+      "path": "models/customer_360/schema.yml",
+      "purpose": "dbt model contract patch",
+      "status": "generated"
+    },
+    {
+      "path": "tests/assert_customer_tier_compatibility.sql",
+      "purpose": "Parity gate test",
+      "status": "generated"
+    },
+    {
+      "path": "review/ripplecheck-decision.md",
+      "purpose": "Human-readable PR decision",
+      "status": "generated"
+    },
+    {
+      "path": "review/owner-routing.json",
+      "purpose": "Machine-readable owner routing",
+      "status": "generated"
+    },
+    {
+      "path": "manifest/change-capsule.json",
+      "purpose": "Reproducible evidence manifest",
+      "status": "generated"
+    }
+  ],
+  "change_capsule": {
+    "capsule_id": "RC-4AC01328A4AA",
+    "schema_version": "1.0",
+    "compiler": "ripplecheck/2.0",
+    "deterministic": true,
+    "input_sha256": "4ac01328a4aa35a7ba0ddd90780cecdeaf7d8d5224fa74e6596345132c536507",
+    "evidence_sha256": "88f7745b4a8de94a892d39fab698ddd2fd7035ec91a6b6744bb113326d6a7ac6",
+    "catalog_snapshot": "retail-analytics-demo",
+    "transport": "DataHub MCP tool contract"
+  },
+  "release_gate": {
+    "status": "CLOSED",
+    "blockers": [
+      "RC-001",
+      "RC-007",
+      "RC-021",
+      "RC-032"
+    ],
+    "warnings": [
+      "RC-013"
+    ],
+    "passed": [
+      "RC-044"
+    ],
+    "required_approvals": [
+      "data owner",
+      "downstream owners"
+    ],
+    "release_condition": "Migrate every active consumer, reach 100% ownership, and rerun this capsule."
+  },
+  "tool_trace": [
+    {
+      "tool": "search",
+      "arguments": {
+        "query": "/q warehouse+analytics+customer_360",
+        "num_results": 8
+      },
+      "summary": "Resolved the proposed dataset against the DataHub catalog."
+    },
+    {
+      "tool": "list_schema_fields",
+      "arguments": {
+        "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.analytics.customer_360,PROD)",
+        "keywords": [
+          "customer_tier"
+        ],
+        "limit": 20
+      },
+      "summary": "Confirmed whether column customer_tier exists and loaded its governance tags."
+    },
+    {
+      "tool": "get_lineage",
+      "arguments": {
+        "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.analytics.customer_360,PROD)",
+        "column": "customer_tier",
+        "upstream": false,
+        "max_hops": 3,
+        "max_results": 50
+      },
+      "summary": "Traced column-level downstream lineage through three hops."
+    },
+    {
+      "tool": "get_entities",
+      "arguments": {
+        "urns": [
+          "urn:li:dataset:(urn:li:dataPlatform:dbt,dbt.marts.customer_retention,PROD)",
+          "urn:li:dataFlow:(airflow,customer_segmentation,PROD)",
+          "urn:li:mlModel:(urn:li:dataPlatform:mlflow,churn_risk_v3,PROD)",
+          "urn:li:dashboard:(looker,executive_growth)",
+          "urn:li:dashboard:(tableau,retention_operations)"
+        ]
+      },
+      "summary": "Loaded downstream owners, criticality tags, and asset types in one batch."
+    },
+    {
+      "tool": "update_description",
+      "arguments": {
+        "entity_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.analytics.customer_360,PROD)",
+        "operation": "append",
+        "description": "\n\n### Ripplecheck decision\n```json\n{\n  \"run_id\": \"967ea7bf95\",\n  \"decision\": \"BLOCK\",\n  \"risk_score\": 10,\n  \"proposed_change\": \"ALTER TABLE warehouse.analytics.customer_360 RENAME COLUMN customer_tier TO loyalty_tier;\",\n  \"downstream_assets\": [\n    \"urn:li:dataFlow:(airflow,customer_segmentation,PROD)\",\n    \"urn:li:dataset:(urn:li:dataPlatform:dbt,dbt.marts.customer_retention,PROD)\",\n    \"urn:li:mlModel:(urn:li:dataPlatform:mlflow,churn_risk_v3,PROD)\",\n    \"urn:li:dashboard:(looker,executive_growth)\",\n    \"urn:li:dashboard:(tableau,retention_operations)\"\n  ],\n  \"owners_to_notify\": [\n    \"bi-core@northstar.example\",\n    \"growth-analytics@northstar.example\",\n    \"marketing-data@northstar.example\",\n    \"ml-retention@northstar.example\"\n  ],\n  \"capsule_id\": \"RC-4AC01328A4AA\",\n  \"evidence_sha256\": \"88f7745b4a8de94a892d39fab698ddd2fd7035ec91a6b6744bb113326d6a7ac6\",\n  \"release_gate\": \"CLOSED\",\n  \"policy_blockers\": [\n    \"RC-001\",\n    \"RC-007\",\n    \"RC-021\",\n    \"RC-032\"\n  ]\n}\n```",
+        "column_path": "customer_tier"
+      },
+      "summary": "Appended the assessment to the source column so the next agent inherits it."
+    }
+  ],
+  "writeback": {
+    "success": true,
+    "urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,warehouse.analytics.customer_360,PROD)",
+    "column_path": "customer_tier",
+    "message": "Decision record captured by the offline DataHub fixture.",
+    "mode": "fixture"
+  }
+}

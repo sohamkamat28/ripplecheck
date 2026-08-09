@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: customer_360
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: customer_tier
+        data_type: string
+        description: Compatibility field; remove only after Ripplecheck gate G1 opens.
+        meta:
+          deprecated: true
+          replacement: loyalty_tier
+      - name: loyalty_tier
+        data_type: string
+        description: Replacement field generated from the approved schema migration.

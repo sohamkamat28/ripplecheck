@@ -1,0 +1,108 @@
+{
+  "artifact_manifest": [
+    {
+      "path": "migration/compatibility_view.sql",
+      "purpose": "Zero-downtime compatibility SQL",
+      "status": "generated"
+    },
+    {
+      "path": "models/customer_360/schema.yml",
+      "purpose": "dbt model contract patch",
+      "status": "generated"
+    },
+    {
+      "path": "tests/assert_customer_tier_compatibility.sql",
+      "purpose": "Parity gate test",
+      "status": "generated"
+    },
+    {
+      "path": "review/ripplecheck-decision.md",
+      "purpose": "Human-readable PR decision",
+      "status": "generated"
+    },
+    {
+      "path": "review/owner-routing.json",
+      "purpose": "Machine-readable owner routing",
+      "status": "generated"
+    },
+    {
+      "path": "manifest/change-capsule.json",
+      "purpose": "Reproducible evidence manifest",
+      "status": "generated"
+    }
+  ],
+  "capsule_id": "RC-4AC01328A4AA",
+  "catalog_snapshot": "retail-analytics-demo",
+  "compiler": "ripplecheck/2.0",
+  "deterministic": true,
+  "evidence_sha256": "88f7745b4a8de94a892d39fab698ddd2fd7035ec91a6b6744bb113326d6a7ac6",
+  "input_sha256": "4ac01328a4aa35a7ba0ddd90780cecdeaf7d8d5224fa74e6596345132c536507",
+  "policy_proof": [
+    {
+      "evidence": "5 active column-lineage edges found across the inspected graph.",
+      "id": "RC-001",
+      "status": "FAIL",
+      "title": "Breaking changes need zero active consumers"
+    },
+    {
+      "evidence": "3 affected assets carry the Critical tag.",
+      "id": "RC-007",
+      "status": "FAIL",
+      "title": "Critical consumers require an explicit migration"
+    },
+    {
+      "evidence": "1 affected asset has no DataHub owner.",
+      "id": "RC-013",
+      "status": "WARN",
+      "title": "Every affected asset must have an accountable owner"
+    },
+    {
+      "evidence": "1 production ML consumer uses the proposed field.",
+      "id": "RC-021",
+      "status": "FAIL",
+      "title": "Production ML inputs cannot change without feature migration"
+    },
+    {
+      "evidence": "Direct DDL has no compatibility window or rollback gate.",
+      "id": "RC-032",
+      "status": "FAIL",
+      "title": "The rollout must be backward compatible and reversible"
+    },
+    {
+      "evidence": "DataHub evidence loaded for tags: Critical, Tier1.",
+      "id": "RC-044",
+      "status": "PASS",
+      "title": "Governed fields require catalog evidence"
+    }
+  ],
+  "release_gate": {
+    "blockers": [
+      "RC-001",
+      "RC-007",
+      "RC-021",
+      "RC-032"
+    ],
+    "passed": [
+      "RC-044"
+    ],
+    "release_condition": "Migrate every active consumer, reach 100% ownership, and rerun this capsule.",
+    "required_approvals": [
+      "data owner",
+      "downstream owners"
+    ],
+    "status": "CLOSED",
+    "warnings": [
+      "RC-013"
+    ]
+  },
+  "request": {
+    "action": "rename",
+    "column": "customer_tier",
+    "dataset": "warehouse.analytics.customer_360",
+    "raw": "ALTER TABLE warehouse.analytics.customer_360 RENAME COLUMN customer_tier TO loyalty_tier;",
+    "replacement": "loyalty_tier",
+    "target_type": null
+  },
+  "schema_version": "1.0",
+  "transport": "DataHub MCP tool contract"
+}

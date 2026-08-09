@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: experiment_flags
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: legacy_bucket
+        data_type: string
+        description: Deprecated compatibility field; remove only after Ripplecheck gate G1 opens.
+        meta:
+          deprecated: true
+          release_gate: G1

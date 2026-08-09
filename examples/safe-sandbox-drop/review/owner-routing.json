@@ -1,0 +1,19 @@
+{
+  "capsule_id": "RC-E10A9BC94150",
+  "release_gate": {
+    "blockers": [],
+    "passed": [
+      "RC-001",
+      "RC-007",
+      "RC-013",
+      "RC-021",
+      "RC-032",
+      "RC-044"
+    ],
+    "release_condition": "Evidence satisfies the bounded schema-change policy.",
+    "required_approvals": [],
+    "status": "OPEN",
+    "warnings": []
+  },
+  "routes": []
+}

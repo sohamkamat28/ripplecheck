@@ -1,0 +1,103 @@
+{
+  "artifact_manifest": [
+    {
+      "path": "migration/compatibility_view.sql",
+      "purpose": "Zero-downtime compatibility SQL",
+      "status": "generated"
+    },
+    {
+      "path": "models/experiment_flags/schema.yml",
+      "purpose": "dbt model contract patch",
+      "status": "generated"
+    },
+    {
+      "path": "tests/assert_legacy_bucket_compatibility.sql",
+      "purpose": "Parity gate test",
+      "status": "generated"
+    },
+    {
+      "path": "review/ripplecheck-decision.md",
+      "purpose": "Human-readable PR decision",
+      "status": "generated"
+    },
+    {
+      "path": "review/owner-routing.json",
+      "purpose": "Machine-readable owner routing",
+      "status": "generated"
+    },
+    {
+      "path": "manifest/change-capsule.json",
+      "purpose": "Reproducible evidence manifest",
+      "status": "generated"
+    }
+  ],
+  "capsule_id": "RC-E10A9BC94150",
+  "catalog_snapshot": "retail-analytics-demo",
+  "compiler": "ripplecheck/2.0",
+  "deterministic": true,
+  "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "input_sha256": "e10a9bc941504125d00d8b5bc230695c8e23d2af94d58288f747783d7dabda71",
+  "policy_proof": [
+    {
+      "evidence": "0 active column-lineage edges found across the inspected graph.",
+      "id": "RC-001",
+      "status": "PASS",
+      "title": "Breaking changes need zero active consumers"
+    },
+    {
+      "evidence": "0 affected assets carry the Critical tag.",
+      "id": "RC-007",
+      "status": "PASS",
+      "title": "Critical consumers require an explicit migration"
+    },
+    {
+      "evidence": "0 affected assets have no DataHub owner.",
+      "id": "RC-013",
+      "status": "PASS",
+      "title": "Every affected asset must have an accountable owner"
+    },
+    {
+      "evidence": "0 production ML consumer uses the proposed field.",
+      "id": "RC-021",
+      "status": "PASS",
+      "title": "Production ML inputs cannot change without feature migration"
+    },
+    {
+      "evidence": "No incompatible downstream edge was found.",
+      "id": "RC-032",
+      "status": "PASS",
+      "title": "The rollout must be backward compatible and reversible"
+    },
+    {
+      "evidence": "DataHub evidence loaded.",
+      "id": "RC-044",
+      "status": "PASS",
+      "title": "Governed fields require catalog evidence"
+    }
+  ],
+  "release_gate": {
+    "blockers": [],
+    "passed": [
+      "RC-001",
+      "RC-007",
+      "RC-013",
+      "RC-021",
+      "RC-032",
+      "RC-044"
+    ],
+    "release_condition": "Evidence satisfies the bounded schema-change policy.",
+    "required_approvals": [],
+    "status": "OPEN",
+    "warnings": []
+  },
+  "request": {
+    "action": "drop",
+    "column": "legacy_bucket",
+    "dataset": "warehouse.sandbox.experiment_flags",
+    "raw": "Drop column legacy_bucket from warehouse.sandbox.experiment_flags",
+    "replacement": null,
+    "target_type": null
+  },
+  "schema_version": "1.0",
+  "transport": "DataHub MCP tool contract"
+}
