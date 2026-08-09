@@ -9,7 +9,7 @@ import mimetypes
 from pathlib import Path
 import threading
 from typing import Any
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 from .agent import RipplecheckAgent
 from .evidence_pack import build_evidence_pack
@@ -30,7 +30,8 @@ def create_handler(root: Path, tools: DataHubTools) -> type[BaseHTTPRequestHandl
         server_version = "Ripplecheck/2.0"
 
         def do_GET(self) -> None:  # noqa: N802
-            path = urlparse(self.path).path
+            parsed = urlparse(self.path)
+            path = parsed.path
             if path == "/health":
                 self._json(HTTPStatus.OK, {"status": "ok", "mode": "offline-ready"})
                 return
@@ -41,6 +42,12 @@ def create_handler(root: Path, tools: DataHubTools) -> type[BaseHTTPRequestHandl
                 run_id = path.rsplit("/", 1)[-1]
                 with assessment_lock:
                     assessment = assessments.get(run_id)
+                if assessment is None:
+                    change = (parse_qs(parsed.query).get("change") or [""])[0]
+                    if change:
+                        candidate = agent.assess(change, writeback=False)
+                        if candidate["run_id"] == run_id:
+                            assessment = candidate
                 if assessment is None:
                     self._json(HTTPStatus.NOT_FOUND, {"error": "Run not found. Compile it first."})
                     return

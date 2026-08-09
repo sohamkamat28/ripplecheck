@@ -4,8 +4,8 @@ This is the single recording document. It contains the exact URL, setup, click p
 
 **Target runtime:** 2 minutes 56 seconds  
 **Primary challenge:** **Agents That Do Real Work**  
-**Demo URL:** [http://127.0.0.1:8765](http://127.0.0.1:8765)  
-**Cost:** $0. No OpenAI key, DataHub account, cloud service, or paid model is needed for the recorded path.
+**Demo URL:** [https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app)
+**Cost:** $0. No OpenAI key, DataHub account, paid service, or paid model is needed for the recorded path.
 
 ## The winning use case
 
@@ -22,7 +22,11 @@ One rename crosses a dbt contract, an Airflow flow, a production ML feature, two
 
 ## Pre-recording setup
 
-From the repository root, run:
+Open the public production demo:
+
+[https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app)
+
+If internet access is unreliable during recording, run this local fallback from the repository root:
 
 ```bash
 python3 main.py web --host 127.0.0.1 --port 8765
@@ -30,7 +34,7 @@ python3 main.py web --host 127.0.0.1 --port 8765
 
 Then:
 
-1. Open [http://127.0.0.1:8765](http://127.0.0.1:8765).
+1. Open the production URL above, or [http://127.0.0.1:8765](http://127.0.0.1:8765) only as the offline fallback.
 2. Record at 1920x1080 and set browser zoom to 80%.
 3. Hide bookmarks, downloads, notifications, and personal browser chrome.
 4. Refresh once. Confirm the header says **Offline graph ready**.
@@ -133,7 +137,7 @@ Stop recording immediately after the download begins.
 | Evidence packaging | Python `zipfile`, canonical JSON, SHA-256 | Reviewers need portable artifacts and tamper-evident provenance | Six-file PR pack and deterministic capsule/evidence hashes |
 | Demo API | `ThreadingHTTPServer` and JSON endpoints | Avoids framework installation and keeps the one-command path reliable | Static UI, analysis API, health check, scenarios, and ZIP download |
 | Interface | Semantic HTML, modern CSS, vanilla JavaScript | Fast load, no build step, easy public-repo audit | Responsive tabbed evidence console, keyboard navigation, copy action, and download |
-| Distribution | Docker, Render Blueprint, `Procfile` | Gives judges local and hosted launch paths | Portable container and free-tier deploy configuration |
+| Distribution | Vercel Services, Docker, Render Blueprint, `Procfile` | Gives judges public, serverless, local, and container launch paths | Verified free production URL plus portable deployment options |
 | Verification | `unittest`, browser interaction checks, GitHub Actions, preflight script | Submission failures are often packaging or UI failures | Policy, MCP, parser, determinism, ZIP, responsive, and required-file coverage |
 
 ## Architecture you can explain if a judge asks
@@ -170,7 +174,7 @@ The system is intentionally hybrid: DataHub MCP provides dynamic metadata truth;
 
 ## Recovery during recording
 
-- If the result does not appear, confirm the terminal still says `Ripplecheck demo listening on http://127.0.0.1:8765`, refresh, and restart the take.
+- If the hosted result does not appear, refresh once. If the network is unstable, switch to the local fallback, confirm the terminal says `Ripplecheck demo listening on http://127.0.0.1:8765`, and restart the take.
 - If you accidentally choose another fixture, click **Rename a production contract** under **Judge paths**, then compile again.
 - If the browser download is blocked, do not troubleshoot on camera. Point to the six generated files and finish the closing line; the ZIP endpoint is already proven by the test suite.
 - If you lose your place, the tab order is always **Counterfactual**, **Policy proof**, **Execution DAG**, **MCP trace**.

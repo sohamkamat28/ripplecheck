@@ -11,7 +11,7 @@ Use this page while completing the submission form. It reflects the live form fe
 | Description | Paste all of [`DEVPOST.md`](DEVPOST.md), from **Short description** through **What's next**. Do not paste the final links/checklist notes. |
 | Built with | `DataHub OSS / Core Platform`, `DataHub MCP Server`, `Model Context Protocol`, `Python 3.11`, `Snowflake DDL`, `dbt`, `Docker`, `GitHub Actions`, `HTML`, `CSS`, `JavaScript` |
 | Public repository | `https://github.com/sohamkamat28/ripplecheck` |
-| Project URL | `https://github.com/sohamkamat28/ripplecheck` — the host explicitly permits a repository with clear setup instructions; replace only if a public deployment is verified |
+| Project URL | `https://ripplecheck-datahub.vercel.app` |
 | Sample outputs | `https://github.com/sohamkamat28/ripplecheck/tree/main/examples` |
 | Video | **PENDING:** paste the public YouTube or Vimeo URL; verify in an incognito window and keep runtime below 3:00 |
 | Cover image | Upload `docs/ripplecheck-result.png` |
@@ -22,7 +22,7 @@ Use this page while completing the submission form. It reflects the live form fe
 | --- | --- | --- | --- |
 | 27765 | Yes | Which challenge category? | `Agents That Do Real Work` |
 | 27838 | Yes | Public code repository | `https://github.com/sohamkamat28/ripplecheck` |
-| 27837 | No | Easy-access Project URL | `https://github.com/sohamkamat28/ripplecheck` unless a verified public deployment is available |
+| 27837 | No | Easy-access Project URL | `https://ripplecheck-datahub.vercel.app` |
 | 27839 | No | Generated-artifact examples | `https://github.com/sohamkamat28/ripplecheck/tree/main/examples` |
 | 27767 | Yes | DataHub technologies used | Select both `DataHub OSS / Core Platform` and `DataHub MCP Server`. Both completed a documented live read/write run. Do not select ACK, Skills, or Analytics Agent. |
 | 27768 | No | DataHub contribution | Leave blank. No upstream contribution is claimed. |

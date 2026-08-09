@@ -29,8 +29,9 @@ Internal target: **August 10 at 10:30 PM IST**, four hours before the deadline.
 
 ### Deploy: by Aug 10, 12:00 PM IST
 
-- The official submission instructions allow the public repository with clear setup instructions to serve as the Project URL; this path is ready and requires no paid account.
-- If a Render account is already available, optionally create the included Blueprint, wait for `/health`, and test both default and safe scenarios.
+- [x] Production deployment: `https://ripplecheck-datahub.vercel.app`.
+- [x] Verify anonymous UI, `/health`, scenarios, default analysis, writeback response, and six-file ZIP download.
+- [x] Confirm the deployment requires no login, token, or paid account.
 - Do not substitute an unverified or short-lived tunnel for the durable repository URL.
 - Keep the local demo ready as a recording fallback.
 

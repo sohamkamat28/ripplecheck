@@ -1,6 +1,6 @@
 # Ripplecheck — final one-flow demo pitch
 
-**Demo:** [http://127.0.0.1:8765](http://127.0.0.1:8765)  
+**Demo:** [https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app)
 **Target:** about 2 minutes 45 seconds  
 **Category:** Agents That Do Real Work
 

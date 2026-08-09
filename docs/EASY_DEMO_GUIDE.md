@@ -1,6 +1,6 @@
 # Ripplecheck — easy side-by-side demo guide
 
-**Open this demo:** [http://127.0.0.1:8765](http://127.0.0.1:8765)  
+**Open this demo:** [https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app)
 **Target video length:** 2 minutes 40 seconds  
 **Challenge category:** Agents That Do Real Work  
 **Cost:** $0 — the complete recording path works offline without an API key.
@@ -9,7 +9,7 @@ Keep this guide beside the browser. Read the **SAY** column while doing only the
 
 ## Before you press Record
 
-1. Confirm [http://127.0.0.1:8765](http://127.0.0.1:8765) opens and says **Offline graph ready**.
+1. Confirm [https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app) opens and says **Offline graph ready**.
 2. Set browser zoom to **80%** and close unrelated tabs and notifications.
 3. Refresh the page. Leave the default DDL and checked writeback option unchanged.
 4. Put this guide on one side of the screen and the demo browser on the other.
@@ -73,7 +73,7 @@ If you lose your place, remember this sequence:
 - **Wrong scenario is loaded:** click **Rename a production contract**, then compile again.
 - **You forget the narration:** describe only what is visible, then move to the next tab. The five-click sequence keeps the story intact.
 - **Download is blocked:** point at the six files and say the final sentence. Do not troubleshoot during the recording.
-- **The page does not open:** keep this Codex task open and use [http://127.0.0.1:8765](http://127.0.0.1:8765), not port 8000.
+- **The hosted page does not open:** use the local fallback [http://127.0.0.1:8765](http://127.0.0.1:8765). Keep the local server running during the recording.
 
 ## Optional judge answer
 

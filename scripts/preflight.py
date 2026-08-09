@@ -11,6 +11,8 @@ REQUIRED = [
     "README.md",
     "Dockerfile",
     "render.yaml",
+    "vercel.json",
+    "api/index.py",
     "public/index.html",
     "public/robots.txt",
     "public/llms.txt",

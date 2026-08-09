@@ -58,7 +58,7 @@ The change capsule canonicalizes request, graph, ownership, tag, and policy evid
 
 There are two DataHub transports. The fixture transport implements the same official tool names over a synthetic retail metadata graph for a credential-free demo. The live transport initializes the official DataHub MCP Server and calls it over JSON-RPC stdio. Both use the same agent path, and live errors never fall back silently. The live transport normalizes the current official response envelopes for search, schema, lineage, entity ownership/governance, and mutations.
 
-The agent is available as a responsive web app, JSON API, CLI, and MCP stdio server. Docker, a free-plan Render Blueprint, GitHub Actions, health checks, deterministic samples, and an Apache 2.0 license are included.
+The agent is available as a responsive web app, JSON API, CLI, and MCP stdio server. The public demo runs on Vercel as a static UI plus a dependency-free Python service. Docker, a Render Blueprint, GitHub Actions, health checks, deterministic samples, and an Apache 2.0 license are also included.
 
 ## Technical highlights
 
@@ -124,12 +124,12 @@ We also learned that deterministic authority and generative assistance should be
 - Python 3.11 standard library
 - SHA-256 and deterministic ZIP generation
 - Semantic HTML, CSS, and vanilla JavaScript
-- Docker, Render Blueprints, and GitHub Actions
+- Vercel Services, Docker, Render Blueprints, and GitHub Actions
 
 ## Links to paste before submission
 
 - **Public repository:** `https://github.com/sohamkamat28/ripplecheck`
-- **Project URL:** `https://github.com/sohamkamat28/ripplecheck` (the host permits a repository with clear setup instructions; replace only with a verified hosted URL)
+- **Project URL:** `https://ripplecheck-datahub.vercel.app`
 - **Sample outputs:** `https://github.com/sohamkamat28/ripplecheck/tree/main/examples`
 - **Live DataHub proof:** `https://github.com/sohamkamat28/ripplecheck/blob/main/docs/LIVE_DATAHUB_PROOF.md`
 - **Demo video:** `https://youtu.be/<your-video-id>`

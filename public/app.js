@@ -202,7 +202,7 @@ function renderAssessment(data) {
         <div><p class="empty-kicker">Compilation output</p><h4 id="artifact-title">Merge-ready evidence pack</h4></div>
         <div class="artifact-actions">
           <button id="copy-review" class="secondary-button" type="button">Copy PR decision</button>
-          <a id="download-pack" class="download-button" href="/api/evidence-pack/${encodeURIComponent(data.run_id)}" download>Download PR pack (.zip) <span>↓</span></a>
+          <a id="download-pack" class="download-button" href="/api/evidence-pack/${encodeURIComponent(data.run_id)}?change=${encodeURIComponent(data.request.raw)}" download>Download PR pack (.zip) <span>↓</span></a>
         </div>
       </div>
       <ul class="artifact-list">${artifacts}</ul>

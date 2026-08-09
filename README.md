@@ -14,6 +14,8 @@ It runs with **no API key, no paid billing, no network, and no Python dependenci
 
 **Why:** Ripplecheck does more than retrieve or summarize metadata. It makes a release decision, compiles owner-assigned migration work and code artifacts, and persists the result for the next engineer or agent.
 
+**Live judge demo:** [https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app)
+
 ## Run the judge path
 
 ```bash
@@ -190,6 +192,16 @@ Verification covers parsing, decisions, graph paths, policy rules, execution gat
 
 ## Deploy
 
+### Vercel production
+
+The public judge deployment runs as a static frontend plus a dependency-free Python service:
+
+```bash
+vercel deploy --prod
+```
+
+Production URL: [https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app). The Vercel adapter preserves the local API contract and rebuilds evidence packs statelessly across serverless invocations. No secret or paid resource is required.
+
 ### Docker
 
 ```bash
@@ -204,6 +216,7 @@ Push the repository publicly, create a Render Blueprint from it, and use the gen
 ## Submission package
 
 - [One-document demo runbook and tech stack](docs/DEMO_RUNBOOK.md)
+- [Public Vercel demo](https://ripplecheck-datahub.vercel.app)
 - [Devpost copy](docs/DEVPOST.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Deadline-focused checklist](docs/SUBMISSION_CHECKLIST.md)

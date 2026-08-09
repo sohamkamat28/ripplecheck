@@ -2,6 +2,10 @@
 
 Ripplecheck is free to test and requires no login, API key, paid model, warehouse, or network connection for the default path.
 
+## Zero-setup public test
+
+Open [https://ripplecheck-datahub.vercel.app](https://ripplecheck-datahub.vercel.app), leave the default DDL unchanged, and click **Compile migration plan**. The deployment is public and requires no account or payment.
+
 ## Requirements
 
 - Python 3.11 or newer

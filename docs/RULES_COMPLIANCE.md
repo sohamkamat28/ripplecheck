@@ -29,7 +29,7 @@ The entrant must personally confirm each item; code cannot prove these facts.
 | Uses DataHub open source plus MCP Server, Agent Context Kit, DataHub Skills, or Analytics Agent | Verified against DataHub OSS 1.6.0, the official `showcase-ecommerce` datapack, and official MCP stdio server; see `docs/LIVE_DATAHUB_PROOF.md` | Ready |
 | Fits a challenge | Primary: Agents That Do Real Work; also strongly aligns with Metadata-Aware Code Generation | Ready |
 | Reads context, acts, and writes back | Live MCP run used `search`, `list_schema_fields`, `get_lineage`, `get_entities`, and successful `update_description`; agent generated policy, DAG, and six artifacts | Ready and live-verified |
-| Runs consistently as depicted and described | Dependency-free fixture path, Docker, Render Blueprint, tests, preflight | Ready |
+| Runs consistently as depicted and described | Verified public Vercel deployment, dependency-free fixture path, Docker, tests, and preflight | Ready |
 | Built during submission period | See `docs/DISCLOSURES.md` | Entrant attestation required |
 | Disclose pre-existing code | No pre-existing project code declared; AI coding assistance disclosed | Ready |
 | Authorized third-party SDK/API/data use | Standard library default; official Apache-2.0 MCP server optional; synthetic data | Ready |
@@ -38,7 +38,7 @@ The entrant must personally confirm each item; code cannot prove these facts.
 
 | Material | Requirement | Ripplecheck status |
 | --- | --- | --- |
-| Project URL | Free, unrestricted website, functioning demo, or test build | Ready: public repository with one-command test path, expressly permitted by the host's submission instructions |
+| Project URL | Free, unrestricted website, functioning demo, or test build | Ready and anonymously verified: `https://ripplecheck-datahub.vercel.app` |
 | Public source repository | Full source, assets, and instructions | Ready: `https://github.com/sohamkamat28/ripplecheck` |
 | Apache 2.0 | Root license detected and visible on repository page | Ready: GitHub detects root `LICENSE` as Apache-2.0 |
 | Text description | Features, functionality, technology, and data | `docs/DEVPOST.md` ready |
@@ -100,7 +100,7 @@ Submission accepts the official rules as a contract and the binding decisions of
 - [ ] Entrant or team member names
 - [ ] Eligibility and conflict attestations
 - [ ] Primary challenge category
-- [x] Public project URL: `https://github.com/sohamkamat28/ripplecheck`
+- [x] Public project URL: `https://ripplecheck-datahub.vercel.app`
 - [x] Public GitHub URL: `https://github.com/sohamkamat28/ripplecheck`
 - [ ] Public video URL under 3 minutes
 - [ ] Cover image

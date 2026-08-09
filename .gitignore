@@ -10,4 +10,4 @@ venv/
 !.env.example
 .DS_Store
 data/run-state.json
-
+.vercel/

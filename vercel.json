@@ -1,0 +1,49 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "frontend": {
+      "root": "public"
+    },
+    "ripplecheck": {
+      "root": ".",
+      "entrypoint": "api/index.py",
+      "functions": {
+        "api/index.py": {
+          "includeFiles": "{data/catalog.json,src/**}",
+          "excludeFiles": "{tests/**,examples/**,samples/**,docs/**,__pycache__/**,**/*.pyc}"
+        }
+      }
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": { "service": "ripplecheck", "path": "/api/index" }
+    },
+    {
+      "source": "/api/scenarios",
+      "destination": { "service": "ripplecheck", "path": "/api/index" }
+    },
+    {
+      "source": "/api/analyze",
+      "destination": { "service": "ripplecheck", "path": "/api/index" }
+    },
+    {
+      "source": "/api/evidence-pack/:run_id",
+      "destination": { "service": "ripplecheck", "path": "/api/index" }
+    },
+    {
+      "source": "/(.*)",
+      "destination": { "service": "frontend" }
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "same-origin" }
+      ]
+    }
+  ]
+}
