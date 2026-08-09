@@ -38,9 +38,9 @@ The entrant must personally confirm each item; code cannot prove these facts.
 
 | Material | Requirement | Ripplecheck status |
 | --- | --- | --- |
-| Project URL | Free, unrestricted website, functioning demo, or test build | Public URL pending |
-| Public source repository | Full source, assets, and instructions | GitHub URL pending |
-| Apache 2.0 | Root license detected and visible on repository page | Root `LICENSE` ready; verify after push |
+| Project URL | Free, unrestricted website, functioning demo, or test build | Ready: public repository with one-command test path, expressly permitted by the host's submission instructions |
+| Public source repository | Full source, assets, and instructions | Ready: `https://github.com/sohamkamat28/ripplecheck` |
+| Apache 2.0 | Root license detected and visible on repository page | Ready: GitHub detects root `LICENSE` as Apache-2.0 |
 | Text description | Features, functionality, technology, and data | `docs/DEVPOST.md` ready |
 | Demonstration video | Under 3 minutes, working software shown, public on YouTube/Vimeo/Youku, link included | User preparing |
 | Video rights | No unlicensed music, third-party footage, marks, or other copyrighted material | Record only Ripplecheck; crop unrelated browser/desktop content; use no music |
@@ -100,11 +100,13 @@ Submission accepts the official rules as a contract and the binding decisions of
 - [ ] Entrant or team member names
 - [ ] Eligibility and conflict attestations
 - [ ] Primary challenge category
-- [ ] Public project URL
-- [ ] Public GitHub URL
+- [x] Public project URL: `https://github.com/sohamkamat28/ripplecheck`
+- [x] Public GitHub URL: `https://github.com/sohamkamat28/ripplecheck`
 - [ ] Public video URL under 3 minutes
 - [ ] Cover image
 - [ ] Project description
 - [ ] Technologies used: DataHub MCP Server; DataHub OSS/Core Platform only if actually demonstrated
 - [ ] Optional feedback survey
 - [ ] Final receipt screenshot/PDF
+
+Exact live-form answers and the remaining personal fields are in `docs/DEVPOST_FORM.md`.

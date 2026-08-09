@@ -127,7 +127,8 @@ We also learned that deterministic authority and generative assistance should be
 ## Links to paste before submission
 
 - **Public repository:** `https://github.com/sohamkamat28/ripplecheck`
-- **Project URL fallback:** `https://github.com/sohamkamat28/ripplecheck` (replace with the hosted URL once verified)
+- **Project URL:** `https://github.com/sohamkamat28/ripplecheck` (the host permits a repository with clear setup instructions; replace only with a verified hosted URL)
+- **Sample outputs:** `https://github.com/sohamkamat28/ripplecheck/tree/main/examples`
 - **Demo video:** `https://youtu.be/<your-video-id>`
 
 ## Suggested Devpost tags
@@ -146,4 +147,4 @@ We also learned that deterministic authority and generative assistance should be
 
 ## Final submission check
 
-The deadline is **August 10, 2026 at 5:00 PM EDT**, or **August 11 at 2:30 AM IST**. Replace the three links above, run `make samples && make verify`, confirm the public repository in an incognito window, and follow `docs/DEMO_RUNBOOK.md` for the recording.
+The deadline is **August 10, 2026 at 5:00 PM EDT**, or **August 11 at 2:30 AM IST**. Add the video URL, run `make samples && make verify`, confirm every URL in an incognito window, and follow `docs/DEMO_RUNBOOK.md` for the recording. Use `docs/DEVPOST_FORM.md` for every live submission field.

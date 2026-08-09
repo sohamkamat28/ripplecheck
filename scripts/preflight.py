@@ -16,6 +16,7 @@ REQUIRED = [
     "public/llms.txt",
     "data/catalog.json",
     "docs/DEVPOST.md",
+    "docs/DEVPOST_FORM.md",
     "docs/TESTING.md",
     "docs/RULES_COMPLIANCE.md",
     "docs/DISCLOSURES.md",

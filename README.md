@@ -204,6 +204,7 @@ Push the repository publicly, create a Render Blueprint from it, and use the gen
 - [Checked-in sample outputs](samples/)
 - [Extracted generated artifacts](examples/)
 - [Judge testing instructions](docs/TESTING.md)
+- [Exact Devpost form answers](docs/DEVPOST_FORM.md)
 - [Official-rules compliance matrix](docs/RULES_COMPLIANCE.md)
 - [Project disclosures](docs/DISCLOSURES.md)
 - [Apache License 2.0](LICENSE)

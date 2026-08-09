@@ -20,20 +20,18 @@ Internal target: **August 10 at 10:30 PM IST**, four hours before the deadline.
 
 ### Publish: by Aug 9, 10:00 PM IST
 
-- Create a public GitHub repository named `ripplecheck`.
-- Push the default branch.
-- Confirm GitHub Actions is green.
-- Open the repository in an incognito window.
-- Confirm README links and sample JSON files are readable.
-- Confirm the root Apache-2.0 license is detected in GitHub's About panel.
-- Confirm `docs/DISCLOSURES.md`, `docs/TESTING.md`, and `examples/` are public.
+- [x] Create public repository: `https://github.com/sohamkamat28/ripplecheck`.
+- [x] Push the default branch.
+- [x] Confirm GitHub Actions is green.
+- [x] Verify anonymous repository, README, license, and sample access.
+- [x] Confirm the root license is detected as Apache-2.0.
+- [x] Confirm `docs/DISCLOSURES.md`, `docs/TESTING.md`, and `examples/` are public.
 
 ### Deploy: by Aug 10, 12:00 PM IST
 
-- Create a Render Blueprint from the public repository.
-- Wait for `/health` to pass.
-- Run the default and safe scenarios on the public URL.
-- Paste the live URL into `docs/DEVPOST.md` working copy.
+- The official submission instructions allow the public repository with clear setup instructions to serve as the Project URL; this path is ready and requires no paid account.
+- If a Render account is already available, optionally create the included Blueprint, wait for `/health`, and test both default and safe scenarios.
+- Do not substitute an unverified or short-lived tunnel for the durable repository URL.
 - Keep the local demo ready as a recording fallback.
 
 ### Record: by Aug 10, 5:00 PM IST
@@ -47,7 +45,7 @@ Internal target: **August 10 at 10:30 PM IST**, four hours before the deadline.
 ### Submit: by Aug 10, 10:30 PM IST
 
 - Choose **Agents That Do Real Work**.
-- Paste the prepared Devpost copy.
+- Use `docs/DEVPOST_FORM.md` for exact field-by-field answers and `docs/DEVPOST.md` for the writeup.
 - Add the public repo, live demo, and video URLs.
 - Use the compiled-result screenshot as the cover image.
 - Preview every section and follow every external link.
